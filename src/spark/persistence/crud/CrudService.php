@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Collection;
 use spark\common\Optional;
 use spark\tools\pagination\PaginationFactory;
 use spark\tools\pagination\PaginationParams;
-use spark\tools\ServiceHelper;
+use spark\core\service\ServiceHelper;
 
 class CrudService extends ServiceHelper {
 
