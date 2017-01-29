@@ -1,6 +1,6 @@
 {
   "name": "tahona/spark-persistence",
-  "description": "Persistence",
+  "description": "Persistence ",
   "type": "library",
 
   "keywords": ["mvc"],
@@ -16,6 +16,7 @@
   ],
 
   "require": {
+    
     "php": ">=5.3", 
     "tahona/spark-mvc": "*",
     "doctrine/orm": "v2.4.8"
