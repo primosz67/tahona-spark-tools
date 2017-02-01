@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
-use spark\core\di\Inject;
+use spark\core\annotation\Inject;
 use spark\persistence\criteria\CriteriaHandler;
 use spark\tools\pagination\PaginationParams;
 use spark\utils\Asserts;

@@ -18,7 +18,7 @@ use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
 use spark\common\exception\NotImplementedException;
 use spark\Config;
-use spark\core\di\Inject;
+use spark\core\annotation\Inject;
 use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
 use spark\persistence\tools\DataSource;
 use spark\persistence\tools\DoctrineGenerateResult;
