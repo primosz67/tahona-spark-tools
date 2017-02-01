@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use spark\core\di\Inject;
 use spark\persistence\criteria\CriteriaHandler;
 use spark\tools\pagination\PaginationParams;
 use spark\utils\Asserts;
@@ -21,12 +22,13 @@ use spark\utils\Objects;
 abstract class CrudDao {
 
     /**
+     * @Inject()
      * @var EntityManager
      */
-    private $em;
+    private $entityManager;
 
-    public function __construct($em) {
-        $this->em = $em;
+    public function __construct() {
+
     }
 
     /**
@@ -34,7 +36,7 @@ abstract class CrudDao {
      * @return EntityManager
      */
     protected function getEm() {
-        return $this->em;
+        return $this->entityManager;
     }
 
     /**
@@ -42,16 +44,15 @@ abstract class CrudDao {
      * @return QueryBuilder
      */
     protected function getQBuilder() {
-        return $this->em->createQueryBuilder();
+        return $this->getEm()->createQueryBuilder();
     }
 
     public function findById($id) {
-        $n = $this->em->find($this->getEntityName(), $id);
-        return $n;
+        return $this->getEm()->find($this->getEntityName(), $id);
     }
 
     public function save($entity) {
-        $this->em->transactional(function($em) use ($entity) {
+        $this->getEm()->transactional(function ($em) use ($entity) {
             /** @var EntityManager $em */
             $em->persist($entity);
 
@@ -59,7 +60,7 @@ abstract class CrudDao {
     }
 
     public function saveAll($entities) {
-        $this->em->transactional(function($em) use ($entities ) {
+        $this->getEm()->transactional(function ($em) use ($entities) {
             /** @var EntityManager $em */
             foreach ($entities as $entity) {
                 $em->persist($entity);
@@ -69,7 +70,7 @@ abstract class CrudDao {
     }
 
     public function getAll() {
-        return $this->em->getRepository($this->getEntityName())
+        return $this->getEm()->getRepository($this->getEntityName())
             ->findAll();
     }
 
@@ -77,7 +78,7 @@ abstract class CrudDao {
 
     /**
      * @param array $example
-     * @param array $orderBy  array(property=>ASC)
+     * @param array $orderBy array(property=>ASC)
      * @return array
      */
     public function findByExample($example = array(), $orderBy = array()) {
@@ -90,7 +91,7 @@ abstract class CrudDao {
             ->findBy($example);
 
         if (count($resultSet) > 1) {
-            throw new Exception("Retrieved more than one element! criteria: ".get_class($this));
+            throw new Exception("Retrieved more than one element! criteria: " . get_class($this));
         } else if (isset($resultSet[0])) {
             return $resultSet[0];
         } else {
@@ -107,9 +108,9 @@ abstract class CrudDao {
         $queryBuilder = $queryBuilder->select("count(x)")
             ->from($this->getEntityName(), "x");
 
-        foreach($example as $property=>$value) {
-            $queryBuilder->andWhere($queryBuilder->expr()->eq("x.".$property, ":".$property))
-            ->setParameter($property, $value);
+        foreach ($example as $property => $value) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq("x." . $property, ":" . $property))
+                ->setParameter($property, $value);
         }
 
         return $queryBuilder->getQuery()->getSingleScalarResult();
@@ -151,10 +152,10 @@ abstract class CrudDao {
         if ($paginationParams->hasSorting()) {
             $sortingValue = $paginationParams->getSortingValue();
             if (Objects::isArray($sortingValue)) {
-                foreach($sortingValue as $sortVal=> $orderType)
-                $qb->addOrderBy(CriteriaHandler::ROOT_ALIAS.".".$sortVal, $orderType);
+                foreach ($sortingValue as $sortVal => $orderType)
+                    $qb->addOrderBy(CriteriaHandler::ROOT_ALIAS . "." . $sortVal, $orderType);
             } else {
-                $qb->orderBy(CriteriaHandler::ROOT_ALIAS.".".$sortingValue);
+                $qb->orderBy(CriteriaHandler::ROOT_ALIAS . "." . $sortingValue);
             }
 
         }

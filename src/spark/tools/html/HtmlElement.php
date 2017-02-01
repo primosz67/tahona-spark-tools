@@ -31,7 +31,7 @@ class HtmlElement {
      * HtmlElement constructor.
      * @param $tag
      */
-    public function __construct($tag = null, $element = null) {
+    public function __construct($tag = null, &$element = null) {
         $this->tag = $tag;
         $this->element = $element;
     }

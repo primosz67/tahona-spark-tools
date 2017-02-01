@@ -9,22 +9,21 @@
 namespace spark\persistence\tools;
 
 
-class DbConfig {
+class DataSource {
 
     //To set
-    private $user;
+    private $username;
     private $password;
     private $dbname;
+
     //TODO bad place
-    private $entityPackages = array();
     private $proxyPath;
+    private $entityPackages = array();
 
     private $driver = "pdo_mysql";
     private $host = "localhost";
     private $port = 3306;
     private $charset = "utf8";
-    private $dev = false;
-    private $mode = "mode";
 
 
     /**
@@ -127,47 +126,17 @@ class DbConfig {
     }
 
     /**
-     * @param mixed $user
+     * @param mixed $username
      */
-    public function setUser($user) {
-        $this->user = $user;
+    public function setUsername($username) {
+        $this->username = $username;
     }
 
     /**
      * @return mixed
      */
-    public function getUser() {
-        return $this->user;
-    }
-
-    /**
-     * @param boolean $dev
-     */
-    public function setDev($dev) {
-        $this->dev = $dev;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getDev() {
-        return $this->dev;
-    }
-
-
-    public function asArray() {
-        return array(
-            "mode"=> $this->getMode(),
-            "user" => $this->getUser(),
-            "password" => $this->getPassword(),
-            "database" => $this->getDbname(),
-            "host" => $this->getHost(),
-            "dev" => $this->getDev(),
-
-            //TODO move
-            "entityPackages" => $this->getEntityPackages(),
-            "proxyPath" => $this->getProxyPath()
-        );
+    public function getUsername() {
+        return $this->username;
     }
 
     public function setEntityPackages($entityPackages = array()) {
@@ -181,15 +150,5 @@ class DbConfig {
         return $this->entityPackages;
     }
 
-    public function setMode($mode) {
-        $this->mode = $mode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMode() {
-        return $this->mode;
-    }
 
 }

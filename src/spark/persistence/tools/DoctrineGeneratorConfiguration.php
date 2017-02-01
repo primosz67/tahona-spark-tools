@@ -12,7 +12,7 @@ namespace spark\persistence\tools;
 class DoctrineGeneratorConfiguration {
 
     /**
-     * @var  DbConfig
+     * @var  DataSource
      */
     private $dbConfig;
 
@@ -27,7 +27,7 @@ class DoctrineGeneratorConfiguration {
      */
     private $namespaces;
 
-    public function setDbConfig(DbConfig $dbConfig) {
+    public function setDbConfig(DataSource $dbConfig) {
         $this->dbConfig = $dbConfig;
     }
 
@@ -47,21 +47,7 @@ class DoctrineGeneratorConfiguration {
     }
 
     /**
-     * @param array $namespace
-     */
-    public function setNamespaces($namespace = array()) {
-        $this->namespaces = $namespace;
-    }
-
-    /**
-     * @return array
-     */
-    public function getNamespaces() {
-        return $this->namespaces;
-    }
-
-    /**
-     * @return \spark\persistence\tools\DbConfig
+     * @return \spark\persistence\tools\DataSource
      */
     public function getDbConfig() {
         return $this->dbConfig;

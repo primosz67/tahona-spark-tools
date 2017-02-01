@@ -17,7 +17,10 @@ use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
 use spark\common\exception\NotImplementedException;
-use spark\persistence\tools\DbConfig;
+use spark\Config;
+use spark\core\di\Inject;
+use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
+use spark\persistence\tools\DataSource;
 use spark\persistence\tools\DoctrineGenerateResult;
 use spark\persistence\tools\DoctrineGeneratorConfiguration;
 use spark\utils\Asserts;
@@ -27,12 +30,32 @@ use spark\utils\StringUtils;
 
 class DoctrineGenerator {
 
+
+    /**
+     * @Inject
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var EntityManagerFactory
+     */
+    private $entityManagerFactor;
+
+    /**
+     * DoctrineGenerator constructor.
+     * @param EntityManagerFactory $entityManagerFactor
+     */
+    public function __construct(EntityManagerFactory $entityManagerFactor) {
+        $this->entityManagerFactor = $entityManagerFactor;
+    }
+
     /**
      * Generate entities by database.
      * @param $param
      */
     public function generate($param) {
-        $em = EntityManagerBuilder::build($param);
+        $em = $this->entityManagerFactor->createEntityManager($param);
 
 // custom datatypes (not mapped for reverse engineering)
         $em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('set', 'string');
@@ -63,30 +86,26 @@ class DoctrineGenerator {
         print 'Done!';
     }
 
-    public function generateEntitiesWithConfig(DoctrineGeneratorConfiguration $configuration) {
-        //TODO
-        throw new NotImplementedException();
-    }
-
     /**
      *
      * @param DoctrineGeneratorConfiguration $configuration
      * @return DoctrineGenerateResult
      */
     public function updateSchema(DoctrineGeneratorConfiguration $configuration) {
-        $config = $configuration->getDbConfig();
-        $em = EntityManagerBuilder::build($config->asArray());
-
+        $dbConfig = $configuration->getDbConfig();
+        $em = $this->entityManagerFactor->createEntityManager($dbConfig);
         $genResult = new DoctrineGenerateResult();
 
-        foreach ($configuration->getNamespaces() as $namespace) {
-            $entitiesFilePath = "src/" . $namespace;
+        $packages = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY_PACKAGES, array());
 
-            $path = \spark\Engine::getRootPath() . "/" . $entitiesFilePath;
+
+        foreach ($packages as $namespace) {
+            $entitiesFilePath = StringUtils::replace("src/" . $namespace, "\\", "/");
+
+            $path = $this->config->getProperty("app.path"). "/" . $entitiesFilePath;
 
             Asserts::checkArgument(FileUtils::isExist($path), "DB Generator: Path not exist $path. Check Config ");
             $fileList = FileUtils::getFileList($path);
-
             $classes = array();
 
             $schemaTool = new SchemaTool($em);
@@ -99,6 +118,7 @@ class DoctrineGenerator {
 
                     $className = $namespace . "\\" . $filePath;
                     $classes[] = $em->getClassMetadata($className);
+
                     $schemaTool->updateSchema($classes, true);
 
                     $genResult->addMessage("" , "Updated", $className);

@@ -35,9 +35,9 @@ class DoctrineGenerateResult {
             ->tag("table");
 
         $element = $element->tag("tr")
-            ->tag("td")->tag("b", "Akcja")->end()
-            ->tag("td")->tag("b", "Klasa")->end()
-            ->tag("td")->tag("b", "Komunikat")->end()
+            ->tag("td")->tag("b", "State")->end()
+            ->tag("td")->tag("b", "Class")->end()
+            ->tag("td")->tag("b", "Error message")->end()
             ->end();
 
         foreach($this->messages as $message) {

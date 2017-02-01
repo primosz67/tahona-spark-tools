@@ -10,6 +10,7 @@ namespace spark\tools\mail;
 
 
 use spark\Config;
+use spark\core\annotation\handler\EnableMailerAnnotationHandler;
 use spark\core\ConfigAware;
 use spark\utils\Asserts;
 use spark\utils\Collections;
@@ -37,7 +38,7 @@ class Mailer implements ConfigAware {
     private $config;
 
     public function send(Mail $mail) {
-        $sendMails = $this->config->getProperty("mail.sendMails");
+        $sendMails = $this->config->getProperty(EnableMailerAnnotationHandler::SPARK_MAILER_ENABLED);
 
         Asserts::checkState($this->isValid($mail), "Błędny format mailera");
 

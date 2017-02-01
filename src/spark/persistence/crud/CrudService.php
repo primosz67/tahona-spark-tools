@@ -8,6 +8,10 @@ use spark\tools\pagination\PaginationFactory;
 use spark\tools\pagination\PaginationParams;
 use spark\core\service\ServiceHelper;
 
+/**
+ * Class CrudService
+ * @package spark\persistence\crud
+ */
 class CrudService extends ServiceHelper {
 
     /**
