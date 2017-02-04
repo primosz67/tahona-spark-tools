@@ -9,7 +9,7 @@
 namespace spark\form\validator;
 
 
-use spark\lang\LangMessageResource;
+use spark\core\lang\LangMessageResource;
 use spark\utils\ReflectionUtils;
 use spark\utils\ValidatorUtils;
 use spark\utils\Collections;
