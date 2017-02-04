@@ -29,7 +29,6 @@ class AnnotationValidator extends EntityValidator {
      * @param LangMessageResource $langMessageResource
      */
     public function __construct(LangMessageResource $langMessageResource) {
-        parent::__construct(array());
         $this->langMessageResource = $langMessageResource;
     }
 
@@ -55,15 +54,16 @@ class AnnotationValidator extends EntityValidator {
 
         $withValueSupplier = $this->withValue();
 
-        if (Objects::isString($value) && StringUtils::contains($value, "street")) {
-            var_dump(StringUtils::isNotBlank($value));exit;
-        }
+//        if (Objects::isString($value) && StringUtils::contains($value, "user.password")) {
+//            var_dump(StringUtils::isNotBlank($value));exit;
+//        }
 
         $minMessage = $this->validateField($obj, $field, $value,
             "spark\\form\\validator\\annotation\\Min",
             function ($value, $annotation) {
                 return StringUtils::isBlank($value) || $value >= $annotation->value;
-            },$withValueSupplier);
+            }, $withValueSupplier);
+
 
         $maxMessage = $this->validateField($obj, $field, $value,
             "spark\\form\\validator\\annotation\\Max",
@@ -79,14 +79,14 @@ class AnnotationValidator extends EntityValidator {
             });
 
         return Collections::builder()
-            ->addElement($noNull)
-            ->addElement($notBlank)
-            ->addElement($email)
-            ->addElement($zipCode)
-            ->addElement($dateMessage)
-            ->addElement($minMessage)
-            ->addElement($maxMessage)
-            ->addElement($size)
+            ->add($noNull)
+            ->add($notBlank)
+            ->add($email)
+            ->add($zipCode)
+            ->add($dateMessage)
+            ->add($minMessage)
+            ->add($maxMessage)
+            ->add($size)
             ->filter(function ($x) {
                 return Objects::isNotNull($x);
             })
@@ -99,6 +99,7 @@ class AnnotationValidator extends EntityValidator {
      */
     private function resolveMessage($annotation, \Closure $supplier) {
         if (Objects::isNotNull($this->langMessageResource)) {
+
             $str = $this->langMessageResource->get($annotation->errorCode, $supplier($annotation));
             if (StringUtils::isNotBlank($str)) {
                 return $str;
@@ -123,7 +124,8 @@ class AnnotationValidator extends EntityValidator {
         if (Objects::isNotNull($annotation)) {
             if (!$apply($value, $annotation)) {
                 if (Objects::isNull($messageValuesSupplier)) {
-                    $messageValuesSupplier = function($x){};
+                    $messageValuesSupplier = function ($x) {
+                    };
                 }
                 return $this->resolveMessage($annotation, $messageValuesSupplier);
             }

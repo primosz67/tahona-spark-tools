@@ -12,6 +12,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use spark\Config;
+use spark\core\annotation\handler\EnableApcuAnnotationHandler;
 use spark\security\PassUtils;
 use spark\utils\Asserts;
 use spark\utils\Collections;
@@ -57,7 +58,7 @@ class EntityManagerFactory {
         $config = new Configuration();
         $config->setMetadataDriverImpl($driver);
 
-        $apcuEnabled = $this->config->getProperty(Config::APCU_CACHE_ENABLED);
+        $apcuEnabled = $this->config->getProperty(EnableApcuAnnotationHandler::APCU_CACHE_ENABLED);
 
         if ($apcuEnabled) {
             $code = $this->config->getProperty(self::SPARK_APCU_CACHE_DB_CONFIG_ID);

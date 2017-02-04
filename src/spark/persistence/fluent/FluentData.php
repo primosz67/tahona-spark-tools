@@ -32,7 +32,11 @@ class FluentData {
     }
 
     public function save($entity) {
-        return $this->em->persist($entity);
+        $this->em->transactional(function ($em) use ($entity) {
+            /** @var EntityManager $em */
+            $em->persist($entity);
+
+        });
     }
 
     public function findById($entityName, $id) {

@@ -21,16 +21,29 @@ class DoctrineGenerateResult {
 
     const FIELD_CLASS = "class";
 
-    public function addMessage($message, $action=" ", $class=" ") {
+    public function addMessage($message, $action = " ", $class = " ") {
         $this->messages[] =
             array(
-                self::MESSAGE =>"".$message,
-                self::ACTION =>"".$action,
-                self::FIELD_CLASS =>"".$class,
+                self::MESSAGE => "" . $message,
+                self::ACTION => "" . $action,
+                self::FIELD_CLASS => "" . $class,
             );
     }
 
     public function display() {
+        echo $this->getAsString();
+        exit;
+    }
+
+    public function getAsString() {
+        return $this->getContent();
+    }
+
+    /**
+     * @return string
+     * @throws \spark\common\IllegalStateException
+     */
+    private function getContent() {
         $element = HtmlUtils::builder()
             ->tag("table");
 
@@ -40,7 +53,7 @@ class DoctrineGenerateResult {
             ->tag("td")->tag("b", "Error message")->end()
             ->end();
 
-        foreach($this->messages as $message) {
+        foreach ($this->messages as $message) {
             $element = $element->tag("tr")
                 ->tag("td")->tag("b", $message[self::ACTION])->end()
                 ->tag("td", $message[self::FIELD_CLASS])
@@ -48,10 +61,7 @@ class DoctrineGenerateResult {
                 ->end();
         }
 
-        echo $element->end()
-            ->get();
-
-
-        exit;
+        $str = $element->end()->get();
+        return $str;
     }
 }

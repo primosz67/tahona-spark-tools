@@ -18,8 +18,14 @@ use Doctrine\ORM\Mapping;
  */
 final class EnableDataRepository implements Mapping\Annotation {
 
-    public $dataSourceName = "dataSource";
-    public $managerName = "entityManager";
+    /**
+     * @var string
+     */
+    public $dataSource = "dataSource";
+    /**
+     * @var string
+     */
+    public $manager = "entityManager";
 
     /** @var array */
     public $packages = array();

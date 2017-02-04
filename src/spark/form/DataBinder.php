@@ -11,6 +11,7 @@ namespace spark\form;
 
 use spark\common\IllegalArgumentException;
 use spark\form\converter\DataConverter;
+use spark\form\validator\ArrayEntityValidator;
 use spark\form\validator\EntityValidator;
 use spark\http\Request;
 use spark\http\utils\RequestUtils;
@@ -61,6 +62,7 @@ class DataBinder {
         $this->checkMissingParams($postParams);
 
         foreach ($postParams as $formParamKey => $value) {
+
             if (strpos($formParamKey, ".") > 0) {
                 $accessor = explode(".", $formParamKey);
                 $index = count($accessor) - 1;
@@ -69,14 +71,14 @@ class DataBinder {
                 $methodName = $accessor[$index];
 
                 if (isset($this->objectReferences[$accessObjectKey])) {
-                    $objectToEdit = & $this->objectReferences[$accessObjectKey];
+                    $objectToEdit = &$this->objectReferences[$accessObjectKey];
                 } else {
 
-                    $objectToEdit = & $object;
+                    $objectToEdit = &$object;
 
                     for ($i = 0; $i < $index; $i++) {
                         $propertyName = $accessor[$i];
-                        if (Objects::hasMethod($objectToEdit, "get".ucfirst($propertyName))){
+                        if (Objects::hasMethod($objectToEdit, "get" . ucfirst($propertyName))) {
                             $newObj = Objects::invokeGetMethod($objectToEdit, $propertyName);
                             $objectToEdit = &$newObj;
                         }
@@ -93,7 +95,7 @@ class DataBinder {
                 $this->setValue($objectToEdit, $methodName, $value);
 
             } else {
-                $objectToEdit = & $object;
+                $objectToEdit = &$object;
                 $value = $this->convert($objectToEdit, $formParamKey, $value);
                 $errors = $this->validate($formParamKey, $objectToEdit, $formParamKey, $value);
 
@@ -112,7 +114,7 @@ class DataBinder {
      * @param $value
      */
     private function setValue(&$object, $fields, $value) {
-        $methodName = "set".ucfirst($fields);
+        $methodName = "set" . ucfirst($fields);
 
         try {
             if (method_exists($object, $methodName)) {
@@ -153,17 +155,16 @@ class DataBinder {
 
     public function setValidators($validators) {
         if (is_array($validators)) {
-            $this->validators = new EntityValidator($validators);
-        } else if ($validators instanceOf EntityValidator){
+            $this->validators = new ArrayEntityValidator($validators);
+        } else if ($validators instanceOf EntityValidator) {
             $this->validators = $validators;
         }
     }
 
-
     public function setDataConverters($converters = array()) {
         Asserts::checkArgument(Objects::isArray($converters), "Parameter needs to be Array");
 
-        foreach($converters as $key => $converter) {
+        foreach ($converters as $key => $converter) {
             Asserts::checkArgument(!is_numeric($key), "Key for converter cannot be number");
 
             $converters[StringUtils::replace($key, ".", self::SEPARATOR)] = $converter;
@@ -188,8 +189,8 @@ class DataBinder {
     private function filterKeys($params) {
         $postParams = array();
         foreach ($params as $key => $v) {
-            $filetereKey = StringUtils::replace($key, self::SEPARATOR, ".");
-            $postParams[$filetereKey] = $v;
+            $fileteredKey = StringUtils::replace($key, self::SEPARATOR, ".");
+            $postParams[$fileteredKey] = $v;
         }
         return $postParams;
     }
@@ -203,6 +204,4 @@ class DataBinder {
             $this->errorsHolder->addAllError($errors);
         }
     }
-
-
 }

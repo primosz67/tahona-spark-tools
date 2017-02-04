@@ -91,13 +91,10 @@ class DoctrineGenerator {
      * @param DoctrineGeneratorConfiguration $configuration
      * @return DoctrineGenerateResult
      */
-    public function updateSchema(DoctrineGeneratorConfiguration $configuration) {
+    public function updateSchema(DoctrineGeneratorConfiguration $configuration, $packages=array()) {
         $dbConfig = $configuration->getDbConfig();
         $em = $this->entityManagerFactor->createEntityManager($dbConfig);
         $genResult = new DoctrineGenerateResult();
-
-        $packages = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY_PACKAGES, array());
-
 
         foreach ($packages as $namespace) {
             $entitiesFilePath = StringUtils::replace("src/" . $namespace, "\\", "/");
@@ -111,21 +108,23 @@ class DoctrineGenerator {
             $schemaTool = new SchemaTool($em);
 
             $className = "";
-            try {
-                foreach ($fileList as $filePath) {
+
+            foreach ($fileList as $filePath) {
+                try {
                     $filePath = StringUtils::replace($filePath, ".php", "");
                     $namespace = StringUtils::replace($namespace, "/", "\\");
 
                     $className = $namespace . "\\" . $filePath;
+
                     $classes[] = $em->getClassMetadata($className);
 
                     $schemaTool->updateSchema($classes, true);
 
-                    $genResult->addMessage("" , "Updated", $className);
-                }
+                    $genResult->addMessage("", "Updated", $className);
 
-            } catch (\Exception $e) {
-                $genResult->addMessage($e->getMessage(), "Error", $className);
+                } catch (\Exception $e) {
+                    $genResult->addMessage($e->getMessage(), "Error", $className);
+                }
             }
         }
 

@@ -12,7 +12,7 @@ use spark\core\provider\BeanProvider;
 use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
 use spark\persistence\tools\DoctrineGenerator;
 use spark\persistence\tools\EntityManagerFactory;
-use spark\Services;
+use spark\Container;
 use spark\tools\mail\Mailer;
 
 

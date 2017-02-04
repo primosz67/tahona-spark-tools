@@ -27,7 +27,7 @@ class EnableMailerAnnotationHandler extends AnnotationHandler {
         $this->annotationName = "spark\\tools\\mail\\annotation\\EnableMailer";
     }
 
-    public function handleClassAnnotations($annotations = array(), $bean, \ReflectionClass $classReflection) {
+    public function handleClassAnnotations($annotations = array(), $class, \ReflectionClass $classReflection) {
 
         $annotation = Collections::builder($annotations)
             ->findFirst(Predicates::compute($this->getClassName(), StringUtils::predEquals($this->annotationName)));

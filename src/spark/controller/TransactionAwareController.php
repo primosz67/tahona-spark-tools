@@ -15,7 +15,7 @@ use spark\common\IllegalStateException;
 use spark\Controller;
 use spark\persistence\EmBuilder;
 use spark\persistence\tx\TransactionAware;
-use spark\Services;
+use spark\Container;
 use spark\utils\Asserts;
 
 class TransactionAwareController extends Controller {

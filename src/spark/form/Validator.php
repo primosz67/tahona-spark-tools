@@ -21,7 +21,7 @@ abstract class Validator {
 
     public abstract function isValid($value);
 
-    public function geErrorMessage() {
+    public function getErrorMessage() {
         return $this->errorMessage;
     }
 

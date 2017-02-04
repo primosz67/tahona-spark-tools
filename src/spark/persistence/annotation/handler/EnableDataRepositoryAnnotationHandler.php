@@ -29,25 +29,26 @@ class EnableDataRepositoryAnnotationHandler extends AnnotationHandler {
         $this->annotationName = "spark\\persistence\\annotation\\EnableDataRepository";
     }
 
-    public function handleClassAnnotations($annotations = array(), $bean, \ReflectionClass $classReflection) {
+    public function handleClassAnnotations($annotations = array(), $class, \ReflectionClass $classReflection) {
 
-        $annotation = Collections::builder($annotations)
-            ->findFirst(Predicates::compute($this->getClassName(), StringUtils::predEquals($this->annotationName)));
+        $repositoryAnnotation = Collections::builder($annotations)
+            ->filter(Predicates::compute($this->getClassName(), StringUtils::predEquals($this->annotationName)))
+            ->get();
 
-        /** @var EnableDataRepository $ann */
+        foreach ($repositoryAnnotation as $repAnnotation) {
 
-        if ($annotation->isPresent()) {
-            $ann = $annotation->get();
+            /** @var EnableDataRepository $ann */
+            $ann = $repAnnotation;
             $this->getConfig()->set(self::DATA_REPOSITORY_ENABLED, true);
-
             $this->getConfig()->add(self::DATA_REPOSITORY_PACKAGES, $ann->packages);
 
             $this->getConfig()->add(self::DATA_REPOSITORY, array(
-                $ann->dataSourceName => array(
-                    "dataSourceName" => $ann->dataSourceName,
-                    "managerName" => $ann->managerName,
+                $ann->dataSource => array(
+                    "dataSource" => $ann->dataSource,
+                    "manager" => $ann->manager,
                     "packages" => $ann->packages
                 )));
+
         }
     }
 
