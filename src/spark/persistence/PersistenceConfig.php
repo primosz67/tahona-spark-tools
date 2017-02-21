@@ -45,6 +45,7 @@ class PersistenceConfig {
             $bean = $this->container->get($v["dataSource"]);
             $entityManager = $entityManagerFactory->createEntityManager($bean);
 
+            var_dump("sdsa");
             $this->container->register($v["manager"], $entityManager);
         }
     }

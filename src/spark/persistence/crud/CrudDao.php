@@ -127,7 +127,9 @@ abstract class CrudDao {
     }
 
     public function remove($entity) {
-        $this->getEm()->remove($entity);
+        $this->getEm()->transactional(function($em) use ($entity){
+            $em->remove($entity);
+        });
     }
 
     public function removeAll(array $entities) {

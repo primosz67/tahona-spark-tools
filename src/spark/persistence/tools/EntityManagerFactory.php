@@ -13,11 +13,13 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use spark\Config;
 use spark\core\annotation\handler\EnableApcuAnnotationHandler;
+use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
 use spark\security\PassUtils;
 use spark\utils\Asserts;
 use spark\utils\Collections;
 use spark\utils\FileUtils;
 use spark\utils\Objects;
+use spark\utils\StringFunctions;
 use spark\utils\StringUtils;
 
 
@@ -39,21 +41,25 @@ class EntityManagerFactory {
 
 
     public function createEntityManager(DataSource $dataConfig) {
-        $entityPackages = $this->config->getProperty("spark.db.resources", $dataConfig->getEntityPackages());
+        $entityPackages = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY_PACKAGES,
+            $dataConfig->getEntityPackages());
+
         $proxyPath = $this->config->getProperty("app.path") . "/src/proxy";
 
         Asserts::checkState(Objects::isArray($entityPackages), "entityPackages must be an Array");
         Asserts::notNull($proxyPath, "proxyPath cannot null");
 
         foreach ($entityPackages as $package) {
-            $classLoader = new ClassLoader($package);
-            $classLoader->register();
+//            $classLoader = new ClassLoader($package);
+//            $classLoader->register();
         }
 
         $driver = new AnnotationDriver(new AnnotationReader());
-        $driver->addPaths($entityPackages);
+//        $driver->addPaths($entityPackages);
+
 
 //        AnnotationRegistry::registerLoader('class_exists');
+
 
         $config = new Configuration();
         $config->setMetadataDriverImpl($driver);
@@ -75,8 +81,10 @@ class EntityManagerFactory {
             $this->config->set(self::SPARK_APCU_CACHE_DB_CONFIG_ID, $code);
 
         } else {
-            $config->setAutoGenerateProxyClasses(true);
+            $config->setAutoGenerateProxyClasses(false);
             $config->setMetadataCacheImpl(new ArrayCache());
+            $config->setMetadataCacheImpl(new ArrayCache());
+            $config->setQueryCacheImpl(new ArrayCache());
         }
 
         $dir = $proxyPath;
@@ -87,7 +95,14 @@ class EntityManagerFactory {
         $config->setProxyDir($dir);
         $class = StringUtils::replace($proxyPath, "/", "\\");
         $namespace = StringUtils::substr(1, strlen($class), $class);
-        $config->setProxyNamespace($namespace);
+        $config->setProxyNamespace("proxy");
+
+
+        $entityNamespaces = Collections::builder($entityPackages)
+            ->map(StringFunctions::replace("/", "\\"))
+            ->get();
+
+        $config->setEntityNamespaces($entityNamespaces);
 
         $connectionParams = array(
             'driver' => $dataConfig->getDriver(),
