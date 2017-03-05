@@ -20,7 +20,7 @@ class SimpleLikeCriteria extends EqCriteria {
     }
 
     public function getValue() {
-        return "%".parent::getValue()."%";
+        return "%" . parent::getValue() . "%";
     }
 
 

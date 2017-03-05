@@ -40,12 +40,13 @@ class PersistenceConfig {
     public function entityManager() {
         $property = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY, array());
 
-        foreach ($property as $k => $v) {
-            $entityManagerFactory = new EntityManagerFactory($this->config);
-            $bean = $this->container->get($v["dataSource"]);
-            $entityManager = $entityManagerFactory->createEntityManager($bean);
+        $entityManagerFactory = new EntityManagerFactory($this->config);
 
-            var_dump("sdsa");
+        foreach ($property as $k => $v) {
+
+            $dataSource = $this->container->get($v["dataSource"]);
+            $entityManager = $entityManagerFactory->createEntityManager($dataSource);
+
             $this->container->register($v["manager"], $entityManager);
         }
     }

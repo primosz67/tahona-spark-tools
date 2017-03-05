@@ -56,7 +56,6 @@ class SearchFilterHelper {
      * @return SearchFilterHelper
      */
     public function addText($field, $value = null) {
-
         $param = Collections::getValue($this->params, $field, $value);
         if (Objects::isNotNull($param)) {
             $this->junction->addCriteria(Criterias::like($field, $param));

@@ -41,25 +41,16 @@ class EntityManagerFactory {
 
 
     public function createEntityManager(DataSource $dataConfig) {
-        $entityPackages = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY_PACKAGES,
-            $dataConfig->getEntityPackages());
+
+        $entityPackages = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY_PACKAGES, $dataConfig->getEntityPackages());
 
         $proxyPath = $this->config->getProperty("app.path") . "/src/proxy";
 
         Asserts::checkState(Objects::isArray($entityPackages), "entityPackages must be an Array");
         Asserts::notNull($proxyPath, "proxyPath cannot null");
 
-        foreach ($entityPackages as $package) {
-//            $classLoader = new ClassLoader($package);
-//            $classLoader->register();
-        }
-
         $driver = new AnnotationDriver(new AnnotationReader());
-//        $driver->addPaths($entityPackages);
-
-
-//        AnnotationRegistry::registerLoader('class_exists');
-
+        $driver->addPaths($entityPackages);
 
         $config = new Configuration();
         $config->setMetadataDriverImpl($driver);
@@ -81,8 +72,7 @@ class EntityManagerFactory {
             $this->config->set(self::SPARK_APCU_CACHE_DB_CONFIG_ID, $code);
 
         } else {
-            $config->setAutoGenerateProxyClasses(false);
-            $config->setMetadataCacheImpl(new ArrayCache());
+            $config->setAutoGenerateProxyClasses(true);
             $config->setMetadataCacheImpl(new ArrayCache());
             $config->setQueryCacheImpl(new ArrayCache());
         }
@@ -95,8 +85,8 @@ class EntityManagerFactory {
         $config->setProxyDir($dir);
         $class = StringUtils::replace($proxyPath, "/", "\\");
         $namespace = StringUtils::substr(1, strlen($class), $class);
-        $config->setProxyNamespace("proxy");
 
+        $config->setProxyNamespace("proxy");
 
         $entityNamespaces = Collections::builder($entityPackages)
             ->map(StringFunctions::replace("/", "\\"))
