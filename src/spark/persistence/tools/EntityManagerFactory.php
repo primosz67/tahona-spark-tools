@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use spark\Config;
 use spark\core\annotation\handler\EnableApcuAnnotationHandler;
 use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
-use spark\security\PassUtils;
+use spark\security\utils\PassUtils;
 use spark\utils\Asserts;
 use spark\utils\Collections;
 use spark\utils\FileUtils;

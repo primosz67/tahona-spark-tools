@@ -163,24 +163,13 @@ class DataBinder {
 
     public function setDataConverters($converters = array()) {
         Asserts::checkArgument(Objects::isArray($converters), "Parameter needs to be Array");
-
-
-        foreach ($converters as $key => $converter) {
-            Asserts::checkArgument(!is_numeric($key), "Key for converter cannot be number");
-
-            $newKey = StringUtils::replace($key, ".", self::SEPARATOR);
-            Collections::removeByIndex($converters, $key);
-
-            $converters[$newKey] = $converter;
-        }
-
         $this->converters = $converters;
     }
 
-    private function convert($obj, $fields, $value) {
-        if (Collections::hasKey($this->converters, $fields)) {
+    private function convert($obj, $formParamKey, $value) {
+        if (Collections::hasKey($this->converters, $formParamKey)) {
             /** @var $converter DataConverter */
-            $converter = Collections::getValue($this->converters, $fields);
+            $converter = Collections::getValue($this->converters, $formParamKey);
             return $converter->convert($obj, $value);
         }
         return $value;

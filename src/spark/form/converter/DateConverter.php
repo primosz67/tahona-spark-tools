@@ -27,8 +27,12 @@ class DateConverter implements DataConverter{
     public function convert($obj, $value) {
 
         if (Objects::isNotNull($value))  {
-            return DateUtils::toDate($value, $this->format);
+            $dateTime = DateUtils::toDate($value, $this->format);
+
+            if ($dateTime instanceof \DateTime) {
+                return $dateTime;
+            }
         }
-        return $value;
+        return null;
     }
 }

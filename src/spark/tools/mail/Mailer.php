@@ -18,7 +18,7 @@ use spark\utils\Objects;
 
 
 /**
- * use MessageSender
+ * use MailMessageSender
  *
  * Class Mailer
  * @package spark\tools\mail

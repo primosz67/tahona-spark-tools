@@ -10,7 +10,7 @@ namespace spark\controller;
 
 
 use spark\Controller;
-use spark\security\AuthenticationProviderService;
+use spark\security\core\service\AuthenticationService;
 
 class LoggedUserController extends Controller {
 
@@ -20,10 +20,10 @@ class LoggedUserController extends Controller {
     }
 
     /**
-     * @return AuthenticationProviderService
+     * @return AuthenticationService
      */
     protected  function getAuthenticationService() {
-        return $this->get(AuthenticationProviderService::NAME);
+        return $this->get(AuthenticationService::NAME);
     }
 
 } 

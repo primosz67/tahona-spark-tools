@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping;
  * @Annotation
  * @Target({"CLASS"})
  */
-final class EnableDataRepository implements Mapping\Annotation {
+final class RepositoryData implements Mapping\Annotation {
 
     /**
      * @var string

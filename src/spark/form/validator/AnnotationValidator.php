@@ -32,7 +32,7 @@ class AnnotationValidator extends EntityValidator {
         $this->langMessageResource = $langMessageResource;
     }
 
-    public function validateFieldValue($contex, $obj, $field, $value) {
+    public function validateFieldValue($validatorKey, $obj, $field, $value) {
         $notBlank = $this->validateField($obj, $field, $value, "spark\\form\\validator\\annotation\\NotBlank", function ($value) {
             return StringUtils::isNotBlank($value);
         });
@@ -52,7 +52,7 @@ class AnnotationValidator extends EntityValidator {
             return StringUtils::isBlank($value) || ValidatorUtils::isDate($value);
         });
 
-        $withValueSupplier = $this->withValue();
+        $annotationWithValueSupplier = $this->withValue();
 
 //        if (Objects::isString($value) && StringUtils::contains($value, "user.password")) {
 //            var_dump(StringUtils::isNotBlank($value));exit;
@@ -62,15 +62,13 @@ class AnnotationValidator extends EntityValidator {
             "spark\\form\\validator\\annotation\\Min",
             function ($value, $annotation) {
                 return StringUtils::isBlank($value) || $value >= $annotation->value;
-            }, $withValueSupplier);
-
+            }, $annotationWithValueSupplier);
 
         $maxMessage = $this->validateField($obj, $field, $value,
             "spark\\form\\validator\\annotation\\Max",
             function ($value, $annotation) {
                 return StringUtils::isBlank($value) || $value <= $annotation->value;
-            }, $withValueSupplier);
-
+            }, $annotationWithValueSupplier);
 
         $size = $this->validateField($obj, $field, $value,
             "spark\\form\\validator\\annotation\\Size",
@@ -78,7 +76,7 @@ class AnnotationValidator extends EntityValidator {
                 return Objects::isNull($value) || $value >= $annotation->min && $value <= $annotation->max || $value == $annotation->size;
             });
 
-        return Collections::builder()
+        $messages = Collections::builder()
             ->add($noNull)
             ->add($notBlank)
             ->add($email)
@@ -91,6 +89,8 @@ class AnnotationValidator extends EntityValidator {
                 return Objects::isNotNull($x);
             })
             ->get();
+
+        return $messages;
     }
 
     /**

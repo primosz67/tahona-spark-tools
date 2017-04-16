@@ -4,7 +4,7 @@ namespace spark\persistence\annotation\handler;
 
 use spark\Config;
 use spark\core\annotation\handler\AnnotationHandler;
-use spark\persistence\annotation\EnableDataRepository;
+use spark\persistence\annotation\RepositoryData;
 use spark\utils\Collections;
 use spark\utils\Functions;
 use spark\utils\Objects;
@@ -26,7 +26,7 @@ class EnableDataRepositoryAnnotationHandler extends AnnotationHandler {
     const DATA_REPOSITORY = "spark.data.repository";
 
     public function __construct() {
-        $this->annotationName = "spark\\persistence\\annotation\\EnableDataRepository";
+        $this->annotationName = "spark\\persistence\\annotation\\RepositoryData";
     }
 
     public function handleClassAnnotations($annotations = array(), $class, \ReflectionClass $classReflection) {
@@ -37,7 +37,7 @@ class EnableDataRepositoryAnnotationHandler extends AnnotationHandler {
 
         foreach ($repositoryAnnotation as $repAnnotation) {
 
-            /** @var EnableDataRepository $ann */
+            /** @var RepositoryData $ann */
             $ann = $repAnnotation;
             $this->getConfig()->set(self::DATA_REPOSITORY_ENABLED, true);
             $this->getConfig()->add(self::DATA_REPOSITORY_PACKAGES, $ann->packages);
