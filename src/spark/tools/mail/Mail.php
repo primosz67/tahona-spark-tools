@@ -1,0 +1,101 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: primosz67
+ * Date: 28.06.14
+ * Time: 02:26
+ */
+
+namespace spark\tools\mail;
+
+
+use spark\common\IllegalArgumentException;
+use spark\utils\ValidatorUtils;
+
+class Mail {
+    const D_CONTENT = "content";
+    const D_FROM = "from";
+    const D_TITLE = "title";
+
+    private $title;
+    private $content;
+    private $from;
+    private $to;
+    private $cc;
+
+    /**
+     * @param mixed $cc
+     */
+    public function setCc($cc) {
+        $this->cc = $cc;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCc() {
+        return $this->cc;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content) {
+        $this->content = $content;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent() {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $from
+     */
+    public function setFrom($from) {
+        $this->from = $from;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFrom() {
+        return $this->from;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title) {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle() {
+        return $this->title;
+    }
+
+    /**
+     * @param array|String $to
+     */
+    public function setTo($to) {
+        $this->to = $to;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTo() {
+        return $this->to;
+    }
+
+    private function isMailValid($to) {
+        return MailUtils::isToValid($to);
+    }
+
+
+}
