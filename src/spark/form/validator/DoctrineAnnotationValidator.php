@@ -9,7 +9,9 @@
 namespace spark\form\validator;
 
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
+use spark\core\lang\LangMessageResource;
 use spark\utils\Objects;
 
 class DoctrineAnnotationValidator extends AnnotationValidator {
@@ -19,8 +21,8 @@ class DoctrineAnnotationValidator extends AnnotationValidator {
      */
     private $em;
 
-    public function __construct($em, $lang) {
-        parent::__construct($lang);
+    public function __construct(EntityManager $em, LangMessageResource  $lang, AnnotationReader $annotationReader) {
+        parent::__construct($lang, $annotationReader);
         $this->em = $em;
     }
 

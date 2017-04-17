@@ -9,7 +9,20 @@
 namespace spark\form\validator;
 
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use spark\common\IllegalArgumentException;
 use spark\core\lang\LangMessageResource;
+use spark\form\validator\annotation\validator\AnnotationTypeValidator;
+use spark\form\validator\annotation\validator\DateAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\EmailAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\MaxAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\MinAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\NotBlankAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\NotNullAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\NumberAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\ZipCodeAnnotationTypeValidator;
+use spark\utils\Asserts;
+use spark\utils\Predicates;
 use spark\utils\ReflectionUtils;
 use spark\utils\ValidatorUtils;
 use spark\utils\Collections;
@@ -18,119 +31,54 @@ use spark\utils\StringUtils;
 
 class AnnotationValidator extends EntityValidator {
 
+    private $annotationTypeValidators;
+
     /**
      * @var LangMessageResource
      */
-    //TODO - zrobić messageResolver
     private $langMessageResource;
+
+    /**
+     * @var \Doctrine\Common\Annotations\AnnotationReader
+     */
+    private $annotationReader;
 
     /**
      * AnnotationValidator constructor.
      * @param LangMessageResource $langMessageResource
+     * @param AnnotationReader $annotationReader
      */
-    public function __construct(LangMessageResource $langMessageResource) {
+    public function __construct(LangMessageResource $langMessageResource, AnnotationReader $annotationReader) {
         $this->langMessageResource = $langMessageResource;
+        $this->annotationTypeValidators = array();
+        $this->annotationReader = $annotationReader;
     }
 
     public function validateFieldValue($validatorKey, $obj, $field, $value) {
-        $notBlank = $this->validateField($obj, $field, $value, "spark\\form\\validator\\annotation\\NotBlank", function ($value) {
-            return StringUtils::isNotBlank($value);
-        });
+        $fullClassName = $this->getClassName($obj);
+        $reflectionObject = new \ReflectionClass($fullClassName);
 
-        $noNull = $this->validateField($obj, $field, $value, "spark\\form\\validator\\annotation\\NotNull", function ($value) {
-            return Objects::isNotNull($value);
-        });
+        if ($reflectionObject->hasProperty($field)) {
+            $reflectionProperty = $reflectionObject->getProperty($field);
 
-        $email = $this->validateField($obj, $field, $value, "spark\\form\\validator\\annotation\\Email", function ($value) {
-            return StringUtils::isBlank($value) || ValidatorUtils::isMailValid($value);
-        });
-        $zipCode = $this->validateField($obj, $field, $value, "spark\\form\\validator\\annotation\\ZipCode", function ($value) {
-            return StringUtils::isBlank($value) || ValidatorUtils::isZipCodeValid($value);
-        });
-
-        $dateMessage = $this->validateField($obj, $field, $value, "spark\\form\\validator\\annotation\\Date", function ($value, $annotation) {
-            return StringUtils::isBlank($value) || ValidatorUtils::isDate($value);
-        });
-
-        $annotationWithValueSupplier = $this->withValue();
-
-//        if (Objects::isString($value) && StringUtils::contains($value, "user.password")) {
-//            var_dump(StringUtils::isNotBlank($value));exit;
-//        }
-
-        $minMessage = $this->validateField($obj, $field, $value,
-            "spark\\form\\validator\\annotation\\Min",
-            function ($value, $annotation) {
-                return StringUtils::isBlank($value) || $value >= $annotation->value;
-            }, $annotationWithValueSupplier);
-
-        $maxMessage = $this->validateField($obj, $field, $value,
-            "spark\\form\\validator\\annotation\\Max",
-            function ($value, $annotation) {
-                return StringUtils::isBlank($value) || $value <= $annotation->value;
-            }, $annotationWithValueSupplier);
-
-        $size = $this->validateField($obj, $field, $value,
-            "spark\\form\\validator\\annotation\\Size",
-            function ($value, $annotation) {
-                return Objects::isNull($value) || $value >= $annotation->min && $value <= $annotation->max || $value == $annotation->size;
-            });
-
-        $messages = Collections::builder()
-            ->add($noNull)
-            ->add($notBlank)
-            ->add($email)
-            ->add($zipCode)
-            ->add($dateMessage)
-            ->add($minMessage)
-            ->add($maxMessage)
-            ->add($size)
-            ->filter(function ($x) {
-                return Objects::isNotNull($x);
-            })
-            ->get();
-
-        return $messages;
+            return Collections::builder($this->annotationTypeValidators)
+                ->map($this->getValidateFunction($obj, $value, $reflectionProperty))
+                ->filter(Predicates::notNull())
+                ->get();
+        }
+        return array();
     }
 
     /**
      * @param $annotation
      * @return mixed
      */
-    private function resolveMessage($annotation, \Closure $supplier) {
-        if (Objects::isNotNull($this->langMessageResource)) {
-
-            $str = $this->langMessageResource->get($annotation->errorCode, $supplier($annotation));
-            if (StringUtils::isNotBlank($str)) {
-                return $str;
-            }
+    private function resolveMessage($annotation, $params = array()) {
+        $str = $this->langMessageResource->get($annotation->errorCode, $params);
+        if (StringUtils::isNotBlank($str)) {
+            return $str;
         }
         return $annotation->errorCode;
-    }
-
-    /**
-     * @param $obj
-     * @param $field
-     * @param $value
-     * @param $validationAnnotation
-     * @param $apply
-     *
-     * @return string
-     */
-    private function validateField($obj, $field, $value, $validationAnnotation, $apply, $messageValuesSupplier = null) {
-        $fullClassName = $this->getClassName($obj);
-        $annotation = ReflectionUtils::getPropertyAnnotation($fullClassName, $field, $validationAnnotation);
-
-        if (Objects::isNotNull($annotation)) {
-            if (!$apply($value, $annotation)) {
-                if (Objects::isNull($messageValuesSupplier)) {
-                    $messageValuesSupplier = function ($x) {
-                    };
-                }
-                return $this->resolveMessage($annotation, $messageValuesSupplier);
-            }
-        }
-        return null;
     }
 
     /**
@@ -142,11 +90,43 @@ class AnnotationValidator extends EntityValidator {
     }
 
     /**
-     * @return \Closure
+     * @param $annotationTypeValidator AnnotationTypeValidator
      */
-    private function withValue() {
-        return function ($annotation) {
-            return array($annotation->value);
+    public function addAnnotationTypeValidator($annotationTypeValidator) {
+        if (!$annotationTypeValidator instanceof AnnotationTypeValidator) {
+            throw  new IllegalArgumentException("AnnotationTypeValidator must be instance of type AnnotationTypeValidator");
+        }
+
+        $this->annotationTypeValidators[] = $annotationTypeValidator;
+    }
+
+    public function addDefaultValidators() {
+        $this->addAnnotationTypeValidator(new NotBlankAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new NotNullAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new EmailAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new ZipCodeAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new DateAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new MinAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new MaxAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new NumberAnnotationTypeValidator());
+    }
+
+    /**
+     *
+     * @param $obj
+     * @param $value
+     * @param $reflectionProperty
+     * @return \Closure which return messages or null
+     */
+    private function getValidateFunction($obj, $value, $reflectionProperty) {
+        return function ($typeValidator) use ($reflectionProperty, $obj, $value) {
+            /** @var AnnotationTypeValidator $typeValidator */
+            $annotation = $this->annotationReader->getPropertyAnnotation($reflectionProperty, $typeValidator->getAnnotationClassName());
+
+            if (Objects::isNotNull($annotation) && !$typeValidator->isValid($obj, $value, $annotation)) {
+                return $this->resolveMessage($annotation, $typeValidator->getAnnotationValues($annotation));
+            }
+            return null;
         };
     }
 
