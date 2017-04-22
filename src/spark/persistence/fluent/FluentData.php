@@ -10,7 +10,10 @@ namespace spark\persistence\fluent;
 
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use spark\common\IllegalStateException;
+use spark\common\Optional;
+use spark\utils\Objects;
 
 class FluentData {
     const NAME = "fluentData";
@@ -40,6 +43,9 @@ class FluentData {
         });
     }
 
+    /**
+     * @deprecated
+     */
     public function findById($entityName, $id) {
         return $this->em->find($entityName, $id);
     }
@@ -77,5 +83,41 @@ class FluentData {
 
     public function remove($entity) {
         $this->em->remove($entity);
+    }
+
+    /**
+     *
+     * @param $class
+     * @param $getId
+     * @return Optional
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
+    public function find($class, $getId) {
+        $entity = $this->em->find($class, $getId);
+        return Optional::ofNullable($entity);
+    }
+
+    /**
+     *
+     * @param $class
+     * @param $id
+     * @return null|object
+     * @throws EntityNotFoundException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
+    public function get($class, $id) {
+        $entity = $this->em->find($class, $id);
+        if (Objects::isNull($entity)) {
+            throw  new EntityNotFoundException();
+        }
+        return $entity;
+    }
+
+    public function detach($obj) {
+        $this->em->detach($obj);
     }
 }

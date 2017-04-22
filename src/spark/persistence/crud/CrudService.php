@@ -3,10 +3,13 @@
 namespace spark\persistence\crud;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityNotFoundException;
 use spark\common\Optional;
 use spark\tools\pagination\PaginationFactory;
 use spark\tools\pagination\PaginationParams;
 use spark\core\service\ServiceHelper;
+use spark\utils\Asserts;
+use spark\utils\Objects;
 
 /**
  * Class CrudService
@@ -32,6 +35,19 @@ class CrudService extends ServiceHelper {
         return Optional::ofNullable($this->getDAO()->findById($id));
     }
 
+    public function get($id) {
+        $entity = $this->getDAO()->findById($id);
+        if (Objects::isNull($entity)){
+            throw new EntityNotFoundException();
+        }
+        return $entity;
+    }
+
+    /**
+     * @deprecated
+     * @param $id
+     * @return null|object
+     */
     public function getById($id) {
         return $this->getDAO()->findById($id);
     }

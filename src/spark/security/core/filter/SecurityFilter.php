@@ -19,6 +19,9 @@ use spark\security\core\SecurityManager;
 use spark\security\core\service\AuthenticationService;
 use spark\security\exception\AccessDeniedException;
 
+/**
+ * For use use  EnableSecurity annotation
+ */
 class SecurityFilter implements HttpFilter {
 
     /**
@@ -35,8 +38,7 @@ class SecurityFilter implements HttpFilter {
 
     function doFilter(Request $request, FilterChain $filterChain) {
 
-        $urlRoles = $this->securityManager->getRoles();
-        $hasUserAccess = $this->authenticationService->hasUserAccess($urlRoles);
+        $hasUserAccess = $this->securityManager->hasAccess($request);
 
         if (!$hasUserAccess) {
             throw new AccessDeniedException();

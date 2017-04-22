@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping;
 
 /**
  * @Annotation
- * @Target({"METHOD"})
+ * @Target({"CLASS", "METHOD"})
  */
 final class Authorize implements Mapping\Annotation {
 

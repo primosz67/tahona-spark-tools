@@ -47,6 +47,14 @@ abstract class CrudDao {
         return $this->getEm()->createQueryBuilder();
     }
 
+    /**
+     *
+     * @param $id
+     * @return null|object
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
     public function findById($id) {
         return $this->getEm()->find($this->getEntityName(), $id);
     }

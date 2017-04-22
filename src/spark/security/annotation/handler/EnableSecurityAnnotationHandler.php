@@ -24,26 +24,18 @@ class EnableSecurityAnnotationHandler extends AnnotationHandler {
 
     private $annotationName;
 
-    const DATA_REPOSITORY_ENABLED = "spark.data.repository.enabled";
-    const DATA_REPOSITORY_PACKAGES = "spark.data.repository.package.list";
-    const DATA_REPOSITORY = "spark.data.repository";
-
-
     public function __construct() {
         $this->annotationName = "spark\\security\\annotation\\EnableSecurity";
     }
 
     public function handleClassAnnotations($annotations = array(), $class, \ReflectionClass $classReflection) {
         $repositoryAnnotations = Collections::builder($annotations)
-            ->filter(Predicates::compute($this->getClassName(),
-                StringUtils::predEquals($this->annotationName)))
-            ->findFirst();
+            ->findFirst(Predicates::compute($this->getClassName(), StringUtils::predEquals($this->annotationName)));
 
         if ($repositoryAnnotations->isPresent()) {
             $this->getContainer()->registerObj(new SecurityFilter());
         }
     }
-
 
     private function getClassName() {
         return Functions::getClassName();

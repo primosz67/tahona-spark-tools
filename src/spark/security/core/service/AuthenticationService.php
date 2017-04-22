@@ -15,6 +15,7 @@ use spark\http\Session;
 use spark\http\utils\RequestUtils;
 use spark\core\service\ServiceHelper;
 use spark\security\core\domain\AuthUser;
+use spark\utils\Asserts;
 use spark\utils\Collections;
 
 class AuthenticationService extends ServiceHelper {
@@ -24,22 +25,17 @@ class AuthenticationService extends ServiceHelper {
     const LOGGED_USER_SESSION_KEY = "spark_loggedUser";
 
     /**
-     *  Authenticate User
      * @param $userName
      * @param array $roles
      * @param null $additionalDataObject
+     * @throws IllegalArgumentException
      */
-    public function createUser($userName, $roles = array(), $additionalDataObject = null) {
-        $authUser = new AuthUser($userName, $roles, $additionalDataObject);
-        $this->authenticateUser($authUser);
-    }
+    public function authenticateUser($userName, $roles = array(), $additionalDataObject = null) {
+        Asserts::notNull($userName);
+        Asserts::checkArray($roles);
 
-    /**
-     *  Authenticate User
-     * @param AuthUser $authUser
-     */
-    public function authenticateUser(AuthUser $authUser) {
         /** @var $session Session */
+        $authUser = new AuthUser($userName, $roles, $additionalDataObject);
         $session = RequestUtils::getOrCreateSession();
         $session->add(self::LOGGED_USER_SESSION_KEY, $authUser);
     }
@@ -50,7 +46,7 @@ class AuthenticationService extends ServiceHelper {
         return $session->has(self::LOGGED_USER_SESSION_KEY);
     }
 
-    public function  removeUser() {
+    public function removeUser() {
         /** @var $session Session */
         $session = RequestUtils::getSession();
         $session->remove(self::LOGGED_USER_SESSION_KEY);
@@ -70,24 +66,4 @@ class AuthenticationService extends ServiceHelper {
         }
     }
 
-    /**
-     * @param array $pathAccessRoles - array of roles on Path  (check:  Request->roles)
-     * @return bool
-     */
-    public function hasUserAccess($pathAccessRoles = array()) {
-        if (empty($pathAccessRoles)) {
-            return true;
-
-        } else if ($this->isLogged()) {
-            $authUser = $this->getAuthUser();
-            $userRoles = $authUser->getRoles();
-
-            foreach ($pathAccessRoles as $pathRole) {
-                if (in_array($pathRole, $userRoles)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 }
