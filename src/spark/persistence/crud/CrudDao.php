@@ -86,7 +86,7 @@ abstract class CrudDao {
             ->findBy($example, $orderBy);
     }
 
-    public function findOneByExample($example) {
+    public function getOneByExample($example) {
         $resultSet = $this->getEm()->getRepository($this->getEntityName())
             ->findBy($example);
 

@@ -69,8 +69,18 @@ class CrudService extends ServiceHelper {
         return $this->getDAO()->findByExample($example, $orderBy);
     }
 
+    /**
+     * @deprecated  use getOne
+     * @param $example
+     * @return null
+     * @throws \Exception
+     */
     public function findOneByExample($example) {
-        return $this->getDAO()->findOneByExample($example);
+        return $this->getDAO()->getOneByExample($example);
+    }
+
+    public function getOneByExample($example) {
+        return $this->getDAO()->getOneByExample($example);
     }
 
     public function countByExample($example = array()) {
