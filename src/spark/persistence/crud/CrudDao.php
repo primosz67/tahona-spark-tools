@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use spark\common\Optional;
 use spark\core\annotation\Inject;
 use spark\persistence\criteria\CriteriaHandler;
 use spark\tools\pagination\PaginationParams;
@@ -92,6 +93,15 @@ abstract class CrudDao {
     public function findByExample($example = array(), $orderBy = array()) {
         return $this->getEm()->getRepository($this->getEntityName())
             ->findBy($example, $orderBy);
+    }
+
+
+    /**
+     * @param $example
+     * @return Optional
+     */
+    public function findOneByExample($example) {
+        return Optional::ofNullable($this->getOneByExample($example));
     }
 
     public function getOneByExample($example) {

@@ -28,7 +28,13 @@ class DoctrineAnnotationValidator extends AnnotationValidator {
 
 
     protected function getClassName($obj) {
-        return $this->em->getClassMetadata(Objects::getClassName($obj))->name;
+        $className = Objects::getClassName($obj);
+        $classMetadataFactory = $this->em->getMetadataFactory();
+
+        if( $classMetadataFactory->hasMetadataFor($className)){
+            return $classMetadataFactory->getMetadataFor($className)->getName();
+        }
+        return $className;
     }
 
 }

@@ -14,6 +14,9 @@ final class Min implements Mapping\Annotation {
 
     public $errorCode = "error.message.min";
 
+    /**
+     * @var int
+     */
     public $value = 0;
 
 }

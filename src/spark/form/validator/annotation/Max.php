@@ -14,6 +14,10 @@ use Doctrine\ORM\Mapping;
 final class Max implements Mapping\Annotation {
 
     public $errorCode = "error.message.max";
+
+    /**
+     * @var int
+     */
     public $value = null;
 
 }

@@ -12,6 +12,7 @@ namespace spark\form\validator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use spark\common\IllegalArgumentException;
 use spark\core\lang\LangMessageResource;
+use spark\form\validator\annotation\Size;
 use spark\form\validator\annotation\validator\AnnotationTypeValidator;
 use spark\form\validator\annotation\validator\DateAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\EmailAnnotationTypeValidator;
@@ -20,6 +21,7 @@ use spark\form\validator\annotation\validator\MinAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\NotBlankAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\NotNullAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\NumberAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\SizeAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\ZipCodeAnnotationTypeValidator;
 use spark\utils\Asserts;
 use spark\utils\Predicates;
@@ -109,6 +111,7 @@ class AnnotationValidator extends EntityValidator {
         $this->addAnnotationTypeValidator(new MinAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new MaxAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new NumberAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new SizeAnnotationTypeValidator());
     }
 
     /**

@@ -17,8 +17,19 @@ final class Size implements Mapping\Annotation {
     /** @var string */
     public $errorCode = "error.message.size";
 
+    /**
+     * @var int
+     */
     public $min = null;
+
+    /**
+     * @var int
+     */
     public $max = null;
+
+    /**
+     * @var int
+     */
     public $size = null;
 
 }
