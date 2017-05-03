@@ -17,6 +17,7 @@ use spark\core\service\ServiceHelper;
 use spark\security\core\domain\AuthUser;
 use spark\utils\Asserts;
 use spark\utils\Collections;
+use spark\utils\Objects;
 
 class AuthenticationService extends ServiceHelper {
 
@@ -25,7 +26,7 @@ class AuthenticationService extends ServiceHelper {
     const LOGGED_USER_SESSION_KEY = "spark_loggedUser";
 
     /**
-     * @param $userName
+     * @param string $userName
      * @param array $roles
      * @param null $additionalDataObject
      * @throws IllegalArgumentException
@@ -33,6 +34,7 @@ class AuthenticationService extends ServiceHelper {
      */
     public function authenticateUser($userName, $roles = array(), $additionalDataObject = null) {
         Asserts::notNull($userName);
+        Asserts::checkState(Objects::isString($userName), "Username must be string but: ".Objects::getClassName($userName)." given.");
         Asserts::checkArray($roles);
 
         /** @var $session Session */

@@ -35,21 +35,15 @@ class CrudService extends ServiceHelper {
         return Optional::ofNullable($this->getDAO()->findById($id));
     }
 
-    public function get($id) {
-        $entity = $this->getDAO()->findById($id);
-        if (Objects::isNull($entity)){
-            throw new EntityNotFoundException();
-        }
-        return $entity;
-    }
 
     /**
-     * @deprecated
      * @param $id
-     * @return null|object
+     * @return
      */
     public function getById($id) {
-        return $this->getDAO()->findById($id);
+        $byId = $this->getDAO()->findById($id);
+        Asserts::checkNotNull($byId);
+        return $byId;
     }
 
     /**

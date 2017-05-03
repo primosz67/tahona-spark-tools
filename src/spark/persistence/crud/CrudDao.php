@@ -56,6 +56,7 @@ abstract class CrudDao {
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
+     * @return null|entity
      */
     public function findById($id) {
         return $this->getEm()->find($this->getEntityName(), $id);

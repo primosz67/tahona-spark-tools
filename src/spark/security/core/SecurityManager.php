@@ -77,7 +77,7 @@ class SecurityManager {
         $userRoles = $authUser->getRoles();
 
         foreach ($authorizedRoles as $authorizedRole) {
-            if (in_array($authorizedRole, $userRoles)) {
+            if ($authUser->hasRole($authorizedRole)) {
                 return true;
             }
         }
