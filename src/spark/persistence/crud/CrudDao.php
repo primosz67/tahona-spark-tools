@@ -13,6 +13,7 @@ use spark\core\annotation\Inject;
 use spark\persistence\criteria\CriteriaHandler;
 use spark\tools\pagination\PaginationParams;
 use spark\utils\Asserts;
+use spark\utils\Collections;
 use spark\utils\Objects;
 
 /**
@@ -134,7 +135,11 @@ abstract class CrudDao {
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
-    public function findByIds($ids) {
+    public function findByIds($ids = array()) {
+        if (Collections::isEmpty($ids)){
+            return array();
+        }
+
         $queryBuilder = $this->getQBuilder();
         $query = $queryBuilder->select("x")
             ->from($this->getEntityName(), "x")

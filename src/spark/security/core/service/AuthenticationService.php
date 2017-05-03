@@ -29,6 +29,7 @@ class AuthenticationService extends ServiceHelper {
      * @param array $roles
      * @param null $additionalDataObject
      * @throws IllegalArgumentException
+     * @return AuthUser
      */
     public function authenticateUser($userName, $roles = array(), $additionalDataObject = null) {
         Asserts::notNull($userName);
@@ -38,6 +39,7 @@ class AuthenticationService extends ServiceHelper {
         $authUser = new AuthUser($userName, $roles, $additionalDataObject);
         $session = RequestUtils::getOrCreateSession();
         $session->add(self::LOGGED_USER_SESSION_KEY, $authUser);
+        return $authUser;
     }
 
     public function isLogged() {
