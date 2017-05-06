@@ -34,7 +34,7 @@ class AuthenticationService extends ServiceHelper {
      */
     public function authenticateUser($userName, $roles = array(), $additionalDataObject = null) {
         Asserts::notNull($userName);
-        Asserts::checkState(Objects::isString($userName), "Username must be string but: ".Objects::getClassName($userName)." given.");
+        Asserts::checkState(Objects::isString($userName), "Username must be string but something else given.");
         Asserts::checkArray($roles);
 
         /** @var $session Session */
