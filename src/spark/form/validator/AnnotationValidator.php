@@ -58,18 +58,27 @@ class AnnotationValidator extends EntityValidator {
     }
 
     public function validateFieldValue($validatorKey, $obj, $field, $value) {
-        $fullClassName = $this->getClassName($obj);
-        $reflectionObject = new \ReflectionClass($fullClassName);
+        $classNames = Objects::getClassNames($obj);
 
-        if ($reflectionObject->hasProperty($field)) {
-            $reflectionProperty = $reflectionObject->getProperty($field);
+        return Collections::builder($classNames)
+            ->map(function($className){
+                return new \ReflectionClass($className);
+            })
+            ->filter(function($reflectionClass) use ($field){
+                return $reflectionClass->hasProperty($field);
+            })
+            ->map(function($reflectionClass) use ($field){
+                return $reflectionClass->getProperty($field);
+            })
+            ->flatMap(function($reflectionProperty) use ($obj, $field, $value) {
+                return Collections::builder($this->annotationTypeValidators)
+                    ->map($this->getValidateFunction($obj, $value, $reflectionProperty))
+                    ->filter(Predicates::notNull())
+                    ->get();
+            })
+            ->get();
 
-            return Collections::builder($this->annotationTypeValidators)
-                ->map($this->getValidateFunction($obj, $value, $reflectionProperty))
-                ->filter(Predicates::notNull())
-                ->get();
-        }
-        return array();
+
     }
 
     /**

@@ -33,7 +33,7 @@ class SizeAnnotationTypeValidator implements AnnotationTypeValidator {
             ->add($annotation->max)
             ->add($annotation->size)
             ->filter(Predicates::notNull())
-            ->get();
+            ->getList();
     }
 
     /**

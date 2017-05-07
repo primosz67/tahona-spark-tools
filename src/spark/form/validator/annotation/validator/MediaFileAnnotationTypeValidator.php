@@ -14,6 +14,7 @@ use spark\upload\FileSize;
 use spark\utils\Collections;
 use spark\utils\Objects;
 use spark\utils\StringUtils;
+use tahona\media\domain\Media;
 
 class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
 
@@ -23,16 +24,17 @@ class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function isValid($obj, $value, $annotation) {
         return StringUtils::isBlank($value)
-        || !Objects::isArray($value)
-        || Collections::isEmpty($value)
+        || Objects::isNull($value)
         || $this->validateFile($annotation, $value);
     }
 
-    public function validateFile($annotation, $value = array()) {
-        $file = FileObjectFactory::create($value);
+    public function validateFile($annotation, $media) {
         /** @var MediaFile $annotation */
-        return StringUtils::startsWith($file->getContentType(), $annotation->contentType)
-        && $file->getSize() < $annotation->maxSize;
+        $contentTypes = $annotation->contentType;
+        /** @var Media $media */
+
+        return $this->isAnyContentType($contentTypes, $media->getMediaType())
+        && FileSize::getSizeAsKB($media->getFileSize()) < $annotation->maxSize;
     }
 
     /**
@@ -40,6 +42,21 @@ class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
      * @return array
      */
     public function getAnnotationValues($annotation) {
-        return array(FileSize::getSizeAsKB($annotation->maxSize), $annotation->contentType);
+        return Collections::builder()
+            ->add(FileSize::getSizeAsKB($annotation->maxSize))
+            ->addAll($annotation->contentType)
+            ->getList();
+    }
+
+    /**
+     * @param $contentTypes
+     * @param $contentType
+     * @return bool
+     */
+    public function isAnyContentType($contentTypes, $contentType) {
+        return Collections::builder($contentTypes)
+            ->anyMatch(function ($x) use ($contentType) {
+                return StringUtils::startsWith($contentType, $x);
+            });
     }
 }

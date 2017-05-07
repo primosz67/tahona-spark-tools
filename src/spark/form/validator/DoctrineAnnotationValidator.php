@@ -10,8 +10,11 @@ namespace spark\form\validator;
 
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use spark\core\lang\LangMessageResource;
+use spark\utils\Collections;
+use spark\utils\Functions;
 use spark\utils\Objects;
 
 class DoctrineAnnotationValidator extends AnnotationValidator {
@@ -28,12 +31,8 @@ class DoctrineAnnotationValidator extends AnnotationValidator {
 
 
     protected function getClassName($obj) {
-        $className = Objects::getClassName($obj);
-        $classMetadataFactory = $this->em->getMetadataFactory();
-
-        if( $classMetadataFactory->hasMetadataFor($className)){
-            return $classMetadataFactory->getMetadataFor($className)->getName();
-        }
+        $c = Objects::getClassName($obj);
+        $className = ClassUtils::getRealClass($c);
         return $className;
     }
 
