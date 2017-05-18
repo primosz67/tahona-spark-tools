@@ -8,6 +8,7 @@ use spark\common\Optional;
 use spark\tools\pagination\PaginationFactory;
 use spark\tools\pagination\PaginationParams;
 use spark\core\service\ServiceHelper;
+use spark\tools\pagination\SimplePagination;
 use spark\utils\Asserts;
 use spark\utils\Objects;
 
@@ -41,9 +42,8 @@ class CrudService extends ServiceHelper {
      * @return
      */
     public function getById($id) {
-        $byId = $this->getDAO()->findById($id);
-        Asserts::checkNotNull($byId);
-        return $byId;
+        $byId = $this->find($id);
+        return $byId->orElseThrow(new EntityNotFoundException());
     }
 
     /**
@@ -124,7 +124,7 @@ class CrudService extends ServiceHelper {
 
     /**
      * @param PaginationParams $paginationParams
-     * @return pagination\SimplePagination
+     * @return SimplePagination
      */
     public function getPagination(PaginationParams $paginationParams) {
         return PaginationFactory::simplePagination($paginationParams, $this);
