@@ -19,7 +19,7 @@
     
     "php": ">=5.3", 
     "tahona/spark-mvc": "*",
-    "doctrine/orm": "v2.4.8"
+    "doctrine/orm": ">=v2.4.8"
   },
   "autoload": {
     "psr-0": {
