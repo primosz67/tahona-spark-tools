@@ -19,7 +19,7 @@ use spark\utils\Asserts;
 use spark\utils\Collections;
 use spark\utils\Objects;
 
-class AuthenticationService extends ServiceHelper {
+class AuthenticationService {
 
     const NAME = "authenticationService";
 
