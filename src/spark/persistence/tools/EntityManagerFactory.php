@@ -109,7 +109,7 @@ class EntityManagerFactory {
 
     private static function createCache($namespace) {
         $apcCache = new ApcuCache();
-        $apcCache->setNamespace($namespace);
+        $apcCache->setNamespace($namespace."_u_".uniqid("s"));
         return $apcCache;
     }
 
