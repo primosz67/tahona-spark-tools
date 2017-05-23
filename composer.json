@@ -21,7 +21,13 @@
     "tahona/spark-mvc": "*",
     "doctrine/orm": ">=v2.4.8"
   },
+
   "autoload": {
+    "psr-0": {
+      "spark\\": "src/"
+    }
+  },
+  "autoload-dev": {
     "psr-0": {
       "spark\\": "src/"
     }
