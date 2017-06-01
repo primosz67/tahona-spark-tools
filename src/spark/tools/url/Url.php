@@ -68,14 +68,17 @@ class Url {
     }
 
     private function parseQuery($query) {
-        $queries = StringUtils::split($query, "&");
-        $res = array();
+        if (StringUtils::isNotBlank($query)) {
+            $queries = StringUtils::split($query, "&");
+            $res = array();
 
-        foreach ($queries as $q) {
-            $keyValue = StringUtils::split($q, "=");
-            $res[$keyValue[0]] = $keyValue[1];
+            foreach ($queries as $q) {
+                $keyValue = StringUtils::split($q, "=");
+                $res[$keyValue[0]] = Collections::getValueOrDefault($keyValue, 1, "");
+            }
+            return $res;
         }
-        return $res;
+        return array();
     }
 
     /**
