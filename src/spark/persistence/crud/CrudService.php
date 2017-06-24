@@ -10,6 +10,7 @@ use spark\tools\pagination\PaginationParams;
 use spark\core\service\ServiceHelper;
 use spark\tools\pagination\SimplePagination;
 use spark\utils\Asserts;
+use spark\utils\Collections;
 use spark\utils\Objects;
 
 /**
@@ -87,6 +88,17 @@ class CrudService extends ServiceHelper {
      */
     public function findOneByExample($example) {
         return $this->getDAO()->getOneByExample($example);
+    }
+
+    /**
+     * @param array $example
+     * @return Optional
+     * @throws \Exception
+     * @throws \spark\common\IllegalArgumentException
+     */
+    public function findOne($example = array()) {
+        Asserts::checkArgument(Collections::isNotEmpty($example), "Example must not be empty.");
+        return Optional::ofNullable($this->getDAO()->getOneByExample($example));
     }
 
     public function getOneByExample($example) {

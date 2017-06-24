@@ -38,8 +38,6 @@ class PersistenceConfig {
      * @throws \Exception
      */
     public function entityManager() {
-
-
         $property = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY, array());
 
         $entityManagerFactory = new EntityManagerFactory($this->config);
@@ -48,7 +46,6 @@ class PersistenceConfig {
 
             $dataSource = $this->container->get($v["dataSource"]);
             $entityManager = $entityManagerFactory->createEntityManager($dataSource);
-
             $this->container->register($v["manager"], $entityManager);
         }
     }

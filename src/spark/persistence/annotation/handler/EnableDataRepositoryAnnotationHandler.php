@@ -5,6 +5,7 @@ namespace spark\persistence\annotation\handler;
 use spark\Config;
 use spark\core\annotation\handler\AnnotationHandler;
 use spark\persistence\annotation\RepositoryData;
+use spark\persistence\tools\EntityManagerFactory;
 use spark\utils\Collections;
 use spark\utils\Functions;
 use spark\utils\Objects;
@@ -48,7 +49,6 @@ class EnableDataRepositoryAnnotationHandler extends AnnotationHandler {
                     "manager" => $ann->manager,
                     "packages" => $ann->packages
                 )));
-
         }
     }
 

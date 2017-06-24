@@ -55,11 +55,9 @@ class FluentData {
             ->findBy($example, $orderBy);
     }
 
-    /**
-     * @deprecated  use getOneByExample
-     */
+
     public function findOneByExample($entityName, $example) {
-        return $this->getOneByExample($entityName, $example);
+        return Optional::ofNullable($this->getOneByExample($entityName, $example));
     }
 
     /**
@@ -82,7 +80,9 @@ class FluentData {
     }
 
     public function remove($entity) {
-        $this->em->remove($entity);
+        $this->em->transactional(function($em) use ($entity) {
+            $em->remove($entity);
+        });
     }
 
     /**
@@ -119,5 +119,9 @@ class FluentData {
 
     public function detach($obj) {
         $this->em->detach($obj);
+    }
+
+    public function initialize(&$obj){
+        $this->em->initializeObject($obj);
     }
 }

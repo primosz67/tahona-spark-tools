@@ -24,7 +24,7 @@ class Url {
 
         $this->scheme = $arr["scheme"];
         $this->host = $arr["host"];
-        $this->path = Collections::getValueOrDefault($arr, "path","");
+        $this->path = Collections::getValueOrDefault($arr, "path", "");
         $this->queryParams = Collections::getValueOrDefault($arr, "query", array());
         $this->queryParams = $this->parseQuery($this->queryParams);
 
@@ -51,8 +51,8 @@ class Url {
     private function getQuery() {
         if (Collections::isNotEmpty($this->queryParams)) {
             $values = array();
-            foreach ($this->queryParams as $k=> $q) {
-                $values[]=$k."=".$q;
+            foreach ($this->queryParams as $k => $q) {
+                $values[] = $k . "=" . $q;
             }
 
             return "?" . StringUtils::join("&", $values);
@@ -85,8 +85,18 @@ class Url {
      * @param $queryKey
      * @return $this
      */
-    public function removeQueryParam($queryKey)  {
+    public function removeQueryParam($queryKey) {
         Collections::removeByKey($this->queryParams, $queryKey);
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function addParam($key, $value) {
+        $this->queryParams[$key] = $value;
         return $this;
     }
 

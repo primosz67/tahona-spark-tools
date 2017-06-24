@@ -37,7 +37,6 @@ class SecurityFilter implements HttpFilter {
     private $securityManager;
 
     function doFilter(Request $request, FilterChain $filterChain) {
-
         $hasUserAccess = $this->securityManager->hasAccess($request);
 
         if (!$hasUserAccess) {

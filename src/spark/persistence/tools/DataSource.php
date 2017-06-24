@@ -25,7 +25,6 @@ class DataSource {
     private $port = 3306;
     private $charset = "utf8";
 
-
     /**
      * @param string $proxyPath
      */
