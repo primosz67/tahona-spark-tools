@@ -13,6 +13,12 @@ use Doctrine\ORM\Mapping;
 
 
 /**
+ *
+ * There are three  cases :
+ * 1. $roles=null - no authentication
+ * 2. $roles=array() - user authenticated
+ * 3. $roles = ["ADMIN", "MEGA_USER"] - user with role "ADMIN" or "MEGA..." or both.
+ *
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  */
