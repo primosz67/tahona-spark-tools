@@ -17,7 +17,7 @@ use spark\utils\Functions;
 use spark\utils\Objects;
 use spark\utils\Predicates;
 
-class ArrayEntityValidator extends EntityValidator{
+class ArrayEntityValidator extends EntityValidator {
 
     private $validators = array();
 
@@ -58,7 +58,7 @@ class ArrayEntityValidator extends EntityValidator{
 
             if (Objects::isArray($validator)) {
                 return Collections::builder($validator)
-                    ->map(function($validator) use ($obj, $field, $value){
+                    ->map(function ($validator) use ($obj, $field, $value) {
                         return $this->validate($obj, $field, $value, $validator);
                     })
                     ->filter(Predicates::notNull())
@@ -93,16 +93,20 @@ class ArrayEntityValidator extends EntityValidator{
     public function checkFieldExist($data = array()) {
         $errors = array();
         $keys = Collections::getKeys($this->validators);
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             if (!Collections::hasKey($data, $key)) {
                 $validator = $this->validators[$key];
 
                 if (Objects::isArray($validator)) {
+                    $messages = [];
                     foreach ($validator as $v) {
-                        Collections::addAllAndGroup($errors, array($key => $this->getErrorMessage($v)));
+                        $messages[] = $this->getErrorMessage($v);
+
                     }
+                    $errors[$key] = $messages;
+
                 } else {
-                    Collections::addAllAndGroup($errors, array($key => $this->getErrorMessage($validator)));
+                    $errors[$key] = $this->getErrorMessage($validator);
                 }
             }
         }

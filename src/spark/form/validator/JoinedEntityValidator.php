@@ -35,7 +35,7 @@ class JoinedEntityValidator extends EntityValidator {
                 /** @var EntityValidator $entityValidator */
                 return $entityValidator->checkFieldExist($data);
             })
-            ->flatMap(Functions::getSameObject())
+            ->flatMap(Functions::getSameObject(), true)
             ->get();
     }
 
