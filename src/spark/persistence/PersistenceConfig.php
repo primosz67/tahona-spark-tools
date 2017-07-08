@@ -10,6 +10,8 @@ use spark\core\annotation\Bean;
 use spark\core\annotation\Inject;
 use spark\core\provider\BeanProvider;
 use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
+use spark\persistence\annotation\RepositoryData;
+use spark\persistence\tools\DataSource;
 use spark\persistence\tools\DoctrineGenerator;
 use spark\persistence\tools\EntityManagerFactory;
 use spark\Container;
@@ -27,27 +29,10 @@ class PersistenceConfig {
     private $config;
 
     /**
-     * @Inject()
-     * @var Container
+     * @Bean()
      */
-    private $container;
-
-    /**
-     * @PostConstruct()
-     * @return null
-     * @throws \Exception
-     */
-    public function entityManager() {
-        $property = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY, array());
-
-        $entityManagerFactory = new EntityManagerFactory($this->config);
-
-        foreach ($property as $k => $v) {
-
-            $dataSource = $this->container->get($v["dataSource"]);
-            $entityManager = $entityManagerFactory->createEntityManager($dataSource);
-            $this->container->register($v["manager"], $entityManager);
-        }
+    public function entityManagerFactory() {
+        return new EntityManagerFactory($this->config);
     }
 
     /**
@@ -57,5 +42,7 @@ class PersistenceConfig {
         return new DoctrineGenerator(new EntityManagerFactory($this->config));
     }
 
-
+    public function enableDataRepositoryAnnotationHandler() {
+        return new EnableDataRepositoryAnnotationHandler();
+    }
 }

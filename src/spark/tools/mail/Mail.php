@@ -10,6 +10,8 @@ namespace spark\tools\mail;
 
 
 use spark\common\IllegalArgumentException;
+use spark\utils\Asserts;
+use spark\utils\Objects;
 use spark\utils\ValidatorUtils;
 
 class Mail {
@@ -80,9 +82,10 @@ class Mail {
     }
 
     /**
-     * @param array|String $to
+     * @param String $to
      */
     public function setTo($to) {
+        Asserts::checkArgument(Objects::isString($to),"Recipient (to) need to be string");
         $this->to = $to;
     }
 
@@ -92,10 +95,5 @@ class Mail {
     public function getTo() {
         return $this->to;
     }
-
-    private function isMailValid($to) {
-        return MailUtils::isToValid($to);
-    }
-
 
 }

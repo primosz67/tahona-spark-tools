@@ -10,13 +10,9 @@ namespace spark\tools\mail;
 
 
 use spark\Config;
-
 use spark\core\ConfigAware;
-use spark\tools\mail\annotation\handler\EnableMailerAnnotationHandler;
 use spark\utils\Asserts;
-use spark\utils\BooleanUtils;
 use spark\utils\Collections;
-use spark\utils\Objects;
 use spark\utils\StringUtils;
 
 
@@ -30,17 +26,10 @@ class Mailer implements ConfigAware {
 
     const NAME = "mailer";
 
-    /**
-     * @var Config
-     */
-    private $config;
-
     public function send(Mail $mail) {
-        $sendMails = $this->config->getProperty(EnableMailerAnnotationHandler::SPARK_MAILER_ENABLED);
 
         Asserts::checkArgument($this->isValid($mail), "Wrong email format");
 
-        if (BooleanUtils::isTrue($sendMails)) {
 //            $message = new \Swift_Message();
 //            $message->setBcc($mail->getCc());
 //            $message->setSubject($mail->getTitle());
@@ -52,16 +41,15 @@ class Mailer implements ConfigAware {
 //            $mailTransport = new \Swift_SmtpTransport(null);
 //            $mailTransport->send($message);
 
-            $headers = Collections::builder()
-                ->add('MIME-Version: 1.0')
-                ->add('Content-type: text/html; charset=utf-8')
-                ->add("To: " . $this->toMailHeader($mail->getTo()))
-                ->add("From: " . $this->toMailHeader($mail->getFrom()))
-                ->get();
+        $headers = Collections::builder()
+            ->add('MIME-Version: 1.0')
+            ->add('Content-type: text/html; charset=utf-8')
+            ->add("To: " . $this->toMailHeader($mail->getTo()))
+            ->add("From: " . $this->toMailHeader($mail->getFrom()))
+            ->get();
 
-            mail($mail->getTo(), $mail->getTitle(), $mail->getContent(),
-                StringUtils::join("\r\n", $headers));
-        }
+        mail($mail->getTo(), $mail->getTitle(), $mail->getContent(),
+            StringUtils::join("\r\n", $headers));
     }
 
     public function sendMail($mailTO, $userName, $title, $content) {
@@ -77,22 +65,6 @@ class Mailer implements ConfigAware {
         $this->config = $config;
     }
 
-    /**
-     * @param $email
-     * @return array
-     */
-    private function getEmail($email) {
-        if (empty($email)) {
-            $title = $this->config->getProperty(Config::MAIL_FROM_TITLE_KEY);
-            $email = $this->config->getProperty(Config::MAIL_FROM_EMAIL_KEY);
-            return array($email => $title);
-        } else if (Objects::isArray($email)) {
-            return $email;
-        }
-
-        return array($email);
-    }
-
     private function isValid(Mail $mail) {
         return MailUtils::isToValid($mail->getTo())
         || MailUtils::isToValid($mail->getFrom());
@@ -101,7 +73,11 @@ class Mailer implements ConfigAware {
 
     private function toMailHeader($mail) {
         if (is_array($mail)) {
-            return $mail[1] . " <" . $mail[0] . ">";
+            $mailList = array();
+            foreach ($mail as $mailValue => $mailText) {
+                $mailList[] = $mailText . " <" . $mailValue . ">,";
+            }
+            return StringUtils::join(",", $mailList);
         }
         return $mail;
     }

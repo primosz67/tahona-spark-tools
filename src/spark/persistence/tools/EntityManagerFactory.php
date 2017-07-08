@@ -42,7 +42,7 @@ class EntityManagerFactory {
 
     public function createEntityManager(DataSource $dataConfig) {
 
-        $entityPackages = $this->config->getProperty(EnableDataRepositoryAnnotationHandler::DATA_REPOSITORY_PACKAGES, $dataConfig->getEntityPackages());
+        $entityPackages = $dataConfig->getEntityPackages();
 
         $proxyPath = $this->config->getProperty("app.path") . "/src/proxy";
 
@@ -109,7 +109,7 @@ class EntityManagerFactory {
 
     private static function createCache($namespace) {
         $apcCache = new ApcuCache();
-        $apcCache->setNamespace($namespace."_u_".uniqid("s"));
+        $apcCache->setNamespace($namespace . "_u_" . uniqid("s"));
         return $apcCache;
     }
 

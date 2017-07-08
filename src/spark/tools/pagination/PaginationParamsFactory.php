@@ -24,7 +24,7 @@ class PaginationParamsFactory {
         $paginationParams = new PaginationParams();
         $paginationParams->setPageSize((int)$pageSize);
         $paginationParams->setCriteria($criteria);
-        $paginationParams->setSortingValue($sortingValue);
+
         $paginationParams->setCurrentPage((int)$currentPage);
         return $paginationParams;
     }

@@ -10,11 +10,11 @@ namespace spark\tools\pagination;
 
 
 use spark\persistence\crud\CrudService;
-use spark\table\pagination\Pagination;
+use spark\tools\table\pagination\Pagination;
 use spark\utils\Collections;
 use spark\utils\StringUtils;
 
-class PaginationParams extends Pagination{
+class PaginationParams extends Pagination {
 
     private $criteria;
 
