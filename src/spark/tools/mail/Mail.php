@@ -54,10 +54,19 @@ class Mail {
     }
 
     /**
-     * @param mixed $from
+     * @param $fromEmail
+     * @param null $fromName
+     * @throws IllegalArgumentException
      */
-    public function setFrom($from) {
-        $this->from = $from;
+    public function setFrom($fromEmail, $fromName = null) {
+        Asserts::checkArgument(Objects::isString($fromEmail), "fromEmail must be string");
+        Asserts::checkArgument(Objects::isString($fromName), "fromName must be string");
+
+        if (Objects::isNull($fromName)) {
+            $fromName = $fromEmail;
+        }
+
+        $this->from = array($fromEmail => $fromName);
     }
 
     /**
@@ -85,7 +94,7 @@ class Mail {
      * @param String $to
      */
     public function setTo($to) {
-        Asserts::checkArgument(Objects::isString($to),"Recipient (to) need to be string");
+        Asserts::checkArgument(Objects::isString($to), "Recipient (to) need to be string");
         $this->to = $to;
     }
 
