@@ -12,6 +12,7 @@ namespace spark\tools\mail;
 use spark\common\IllegalArgumentException;
 use spark\utils\Asserts;
 use spark\utils\Objects;
+use spark\utils\StringUtils;
 use spark\utils\ValidatorUtils;
 
 class Mail {
@@ -60,12 +61,12 @@ class Mail {
      */
     public function setFrom($fromEmail, $fromName = null) {
         Asserts::checkArgument(Objects::isString($fromEmail), "fromEmail must be string");
-        Asserts::checkArgument(Objects::isString($fromName), "fromName must be string");
 
-        if (Objects::isNull($fromName)) {
+        if (StringUtils::isBlank($fromName)) {
             $fromName = $fromEmail;
         }
 
+        Asserts::checkArgument(Objects::isString($fromName), "fromName must be string");
         $this->from = array($fromEmail => $fromName);
     }
 
