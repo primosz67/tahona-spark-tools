@@ -29,6 +29,7 @@ class Mocker {
                     $mock = $mocks[$reflectionProperty->getName()];
                 }
 
+                Mocker::record($mock);
                 $reflectionProperty->setAccessible(true);
                 $reflectionProperty->setValue($bean, $mock);
             });
@@ -46,5 +47,17 @@ class Mocker {
                 /** @var Answer $a */
                 $verifier->verify($a);
             });
+    }
+
+    /**
+     * @param $mock
+     * @return object
+     */
+    public static function called($mock) {
+        return $mock;
+    }
+    public static function record(Mock $mock) {
+        $mock->stop();
+        return $mock;
     }
 }

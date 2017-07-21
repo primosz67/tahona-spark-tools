@@ -20,13 +20,13 @@ class PassUtils {
 
     const BLOWFISH_SALT_PREFIX = "$2a$12$";
 
-    public static function  genCode($length = 8) {
+    public static function genCode($length = 8) {
         $characters = self::$STRING_NUMBERS_TEMPLATE;
         return self::randomStringFromCharacterSet($length, $characters);
     }
 
     public static function genNumericCode($length = 8) {
-        $characters = self::$NUMBERS_TEMPLATE ;
+        $characters = self::$NUMBERS_TEMPLATE;
         return self::randomStringFromCharacterSet($length, $characters);
     }
 
@@ -34,15 +34,15 @@ class PassUtils {
         Asserts::checkState(strlen($salt) >= 64, "Salt should be longer");
         Asserts::checkState(ValidatorUtils::checkLength($pass, 8), "Pass should be longer than 8");
 
-        return self::passwordHash($pass.$salt, $salt);
+        return self::passwordHash($pass . $salt, $salt);
     }
 
     private static function passwordHash($saltedPassword, $salt) {
-        return crypt($saltedPassword, self::BLOWFISH_SALT_PREFIX.$salt."$");
+        return crypt($saltedPassword, self::BLOWFISH_SALT_PREFIX . $salt . "$");
     }
 
-    public static function generateSalt($length=64) {
-        Asserts::checkState($length> 63, "Salt needs to be longer than 63 letters.");
+    public static function generateSalt($length = 64) {
+        Asserts::checkState($length > 63, "Salt needs to be longer than 63 letters.");
         return bin2hex(mcrypt_create_iv($length, MCRYPT_RAND));
     }
 

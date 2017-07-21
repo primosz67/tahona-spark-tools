@@ -47,5 +47,9 @@ class Answer {
         return $this->methodName;
     }
 
+    public function getArguments() {
+        return $this->arguments;
+    }
+
 
 }
