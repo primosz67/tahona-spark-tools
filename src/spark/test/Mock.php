@@ -12,24 +12,34 @@ use spark\utils\Objects;
 use spark\utils\StringUtils;
 
 class Mock {
+
     private $record = false;
+
     private $recorded = false;
 
-    private $answers = array();
+    private $recordedAnswers = [];
+    private $notRecordedActionRegistry = [];
+    private $name;
+
+    /**
+     * Mock constructor.
+     */
+    public function __construct($name) {
+        $this->name = $name;
+    }
 
 
     function __call($methodName, $arguments) {
 
         if ($this->record) {
-            $this->answers[$methodName] = new Answer($methodName, $arguments);
-            return $this->answers[$methodName];
+            $this->recordedAnswers[$methodName] = new Answer($methodName, $arguments);
+            return $this->recordedAnswers[$methodName];
 
         } else {
 
             /** @var Answer $answer */
-
             $answerOp = Collections::builder()
-                ->addAll($this->answers)
+                ->addAll($this->recordedAnswers)
                 ->findFirst(function ($x) use ($methodName, $arguments) {
                     return $this->match($x, $methodName, $arguments);
                 });
@@ -38,7 +48,9 @@ class Mock {
                 return $answerOp->get()->getValue();
             }
 
-            return new Mock();
+
+            $this->registerNotRecordedAction($methodName, $arguments);
+            return Mock::create();
         }
     }
 
@@ -47,15 +59,15 @@ class Mock {
      * @return array
      */
     public function getAnswers() {
-        return $this->answers;
+        return $this->recordedAnswers;
     }
 
     private function match(Answer $x, $methodName, $arguments) {
         return StringUtils::equals($x->getMethod(), $methodName)
-        && $this->marchArgs($methodName, $x->getArguments(), $arguments);
+        && $this->matchArgs($methodName, $x->getArguments(), $arguments);
     }
 
-    private function marchArgs($methodName, $mockedArgs = array(), $realArgs = array()) {
+    private function matchArgs($methodName, $mockedArgs = array(), $realArgs = array()) {
 
         $i = 0;
         foreach ($mockedArgs as $mockArg) {
@@ -65,7 +77,7 @@ class Mock {
             } elseif (Objects::isArray($mockArg)) {
                 $res = Objects::isArray($value)
                     && Collections::size($mockArg) === Collections::size($value)
-                    && $this->marchArgs($methodName, $mockArg, $value);
+                    && $this->matchArgs($methodName, $mockArg, $value);
 
 
             } else {
@@ -87,15 +99,15 @@ class Mock {
     }
 
 
-    public static function create() {
-        return new Mock();
+    public static function create($name = "Some Mock") {
+        return new Mock($name);
     }
 
     /**
      * @return $this
      */
-    public static function recordable() {
-        $mock = new Mock();
+    public static function recordable($className) {
+        $mock = new Mock($className);
         $mock->record = true;
         return $mock;
     }
@@ -105,5 +117,30 @@ class Mock {
         $this->recorded = true;
     }
 
+    /**
+     * @param $methodName
+     * @param $arguments
+     */
+    private function registerNotRecordedAction($methodName, $arguments) {
+        if (Collections::hasKey($this->notRecordedActionRegistry, $methodName)) {
+            $this->notRecordedActionRegistry[$methodName] = [];
+        }
+
+        $this->notRecordedActionRegistry[$methodName][] = [
+            "methodName" => $methodName,
+            "arguments" => $arguments
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    function getNotRecordedActionRegistry() {
+        return $this->notRecordedActionRegistry;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
 
 }

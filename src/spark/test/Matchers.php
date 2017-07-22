@@ -7,6 +7,7 @@ use spark\common\IllegalArgumentException;
 use spark\core\library\Annotations;
 use spark\utils\Asserts;
 use spark\utils\Collections;
+use spark\utils\JsonUtils;
 use spark\utils\Objects;
 use spark\utils\ReflectionUtils;
 use spark\utils\StringFunctions;
@@ -43,11 +44,36 @@ class Matchers {
     public static function eq($b) {
         return function ($a) use ($b) {
             $res = Objects::equals($a, $b);
+
             if (!$res) {
-                throw  new IllegalArgumentException("Not same value! expected: $a got: $b");
+                $aRes = Matchers::objectToString($a);
+                $bRes = Matchers::objectToString($b);
+
+                throw  new IllegalArgumentException("Not same value! expected: $aRes got: $bRes");
             }
             return $res;
         };
+    }
+
+    private static function objectToString($a) {
+        $json = JsonUtils::toJson($a);
+        $suffix = self::getSuffix($json);
+        $simpleClassName = Objects::getSimpleClassName($a);
+        $objectHash = spl_object_hash($a);
+        $jsonPart = StringUtils::subString($json, 0, 30);
+
+        return $simpleClassName . "(" . $objectHash . ") " . $jsonPart . $suffix;
+    }
+
+    /**
+     * @param $json
+     * @return string
+     */
+    private static function getSuffix($json) {
+        if (StringUtils::length($json) > 30) {
+            return "...";
+        }
+        return " ";
     }
 
 
