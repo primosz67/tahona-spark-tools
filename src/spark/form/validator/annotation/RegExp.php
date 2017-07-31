@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping;
  * @Annotation
  * @Target({"PROPERTY","ANNOTATION"})
  */
-final class Length implements Mapping\Annotation {
+final class RegExp implements Mapping\Annotation {
 
     /** @var string */
     public $errorCode = "error.message.lenght";
