@@ -31,12 +31,7 @@ class UniqueValidator extends Validator {
         if ($count == 0) {
             return true;
         } else if ($count == 1) {
-            //Experimental
-            $entity = $entities[0];
-            $id = $entity->getId();
-            $old = $this->getObject()->getId();
-            
-            return $id == $old;
+            return $entities[0] === $this->getObject();
 
         } else {
             return false;

@@ -16,6 +16,7 @@ use spark\form\validator\annotation\Size;
 use spark\form\validator\annotation\validator\AnnotationTypeValidator;
 use spark\form\validator\annotation\validator\DateAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\EmailAnnotationTypeValidator;
+use spark\form\validator\annotation\validator\LengthAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\MaxAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\MediaFileAnnotationTypeValidator;
 use spark\form\validator\annotation\validator\MinAnnotationTypeValidator;
@@ -122,6 +123,7 @@ class AnnotationValidator extends EntityValidator {
         $this->addAnnotationTypeValidator(new MaxAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new NumberAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new SizeAnnotationTypeValidator());
+        $this->addAnnotationTypeValidator(new LengthAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new MediaFileAnnotationTypeValidator());
     }
 
