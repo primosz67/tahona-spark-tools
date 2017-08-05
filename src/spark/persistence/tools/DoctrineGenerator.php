@@ -101,7 +101,7 @@ class DoctrineGenerator {
 
             $path = $this->config->getProperty("app.path"). "/" . $entitiesFilePath;
 
-            Asserts::checkArgument(FileUtils::isExist($path), "DB Generator: Path not exist $path. Check Config ");
+            Asserts::checkArgument(FileUtils::isDir($path), "DB Generator: Path not exist $path. Check Config ");
             $fileList = FileUtils::getFileList($path);
             $classes = array();
 

@@ -33,7 +33,7 @@ class EnableDataRepositoryAnnotationHandler extends AnnotationHandler {
     public function handleClassAnnotations($annotations = array(), $class, \ReflectionClass $classReflection) {
 
         $repositoryAnnotation = Collections::builder($annotations)
-            ->filter(Predicates::compute($this->getClassName(), StringUtils::predEquals($this->annotationName)))
+            ->filter(Predicates::compute($this->getClassName(), Predicates::equals($this->annotationName)))
             ->get();
 
         foreach ($repositoryAnnotation as $repAnnotation) {

@@ -60,7 +60,7 @@ class Matchers {
         $suffix = self::getSuffix($json);
         $simpleClassName = Objects::getSimpleClassName($a);
         $objectHash = spl_object_hash($a);
-        $jsonPart = StringUtils::subString($json, 0, 30);
+        $jsonPart = StringUtils::substring($json, 0, 30);
 
         return $simpleClassName . "(" . $objectHash . ") " . $jsonPart . $suffix;
     }

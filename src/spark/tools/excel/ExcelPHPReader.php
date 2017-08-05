@@ -10,7 +10,7 @@ class ExcelPHPReader {
 
     private $fileName = "defaultName.xlsx";
 
-    function __construct($fileName) {
+    public function __construct($fileName) {
         $this->fileName = $fileName;
     }
 

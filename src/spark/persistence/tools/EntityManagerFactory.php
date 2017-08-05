@@ -78,13 +78,13 @@ class EntityManagerFactory {
         }
 
         $dir = $proxyPath;
-        if (!FileUtils::isDirExist($dir)) {
+        if (!FileUtils::isDir($dir)) {
             mkdir($dir);
         }
 
         $config->setProxyDir($dir);
         $class = StringUtils::replace($proxyPath, "/", "\\");
-        $namespace = StringUtils::substr(1, strlen($class), $class);
+        $namespace = StringUtils::substring($class, 1, strlen($class));
 
         $config->setProxyNamespace("proxy");
 

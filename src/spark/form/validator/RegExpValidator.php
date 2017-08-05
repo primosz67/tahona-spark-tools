@@ -15,7 +15,7 @@ class RegExpValidator extends Validator {
 
     private $regExp;
 
-    function __construct($regExp, $errorMessage) {
+    public function __construct($regExp, $errorMessage) {
         parent::__construct($errorMessage);
         $this->regExp = $regExp;
     }
