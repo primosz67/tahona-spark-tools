@@ -39,20 +39,49 @@ class EntityManagerFactory {
         $this->config = $config;
     }
 
-
     public function createEntityManager(DataSource $dataConfig) {
+        $entityPackages = $this->getEntityPackages($dataConfig);
+        $proxyPath = $this->getProxyPath();
 
-        $entityPackages = $dataConfig->getEntityPackages();
+        $config = $this->buildDoctrineConfiguration($entityPackages, $proxyPath);
+        $connectionParams = $this->convertToConnectionConfigArray($dataConfig);
 
-        $proxyPath = $this->config->getProperty("app.path") . "/src/proxy";
+        return EntityManager::create($connectionParams, $config);
+    }
 
-        Asserts::checkState(Objects::isArray($entityPackages), "entityPackages must be an Array");
-        Asserts::notNull($proxyPath, "proxyPath cannot null");
+    private static function createCache($namespace) {
+        $apcCache = new ApcuCache();
+        $apcCache->setNamespace($namespace . "_u_" . uniqid("s"));
+        return $apcCache;
+    }
 
+    /**
+     * @param DataSource $dataConfig
+     * @return array
+     */
+    private function convertToConnectionConfigArray(DataSource $dataConfig) {
+        $connectionParams = array(
+            'driver' => $dataConfig->getDriver(),
+            'host' => $dataConfig->getHost(),
+            'port' => $dataConfig->getPort(),
+            'user' => $dataConfig->getUsername(),
+            'password' => $dataConfig->getPassword(),
+            'dbname' => $dataConfig->getDbname(),
+            'charset' => $dataConfig->getCharset(),
+        );
+        return $connectionParams;
+    }
+
+    /**
+     * @param $entityPackages
+     * @return Configuration
+     */
+    private function createConfig($entityPackages) {
         $driver = new AnnotationDriver(new AnnotationReader());
         $driver->addPaths($entityPackages);
 
         $config = new Configuration();
+        $config->setProxyNamespace("proxy");
         $config->setMetadataDriverImpl($driver);
 
         $apcuEnabled = $this->config->getProperty(EnableApcuAnnotationHandler::APCU_CACHE_ENABLED);
@@ -70,47 +99,71 @@ class EntityManagerFactory {
             $config->setQueryCacheImpl(self::createCache($code));
 
             $this->config->set(self::SPARK_APCU_CACHE_DB_CONFIG_ID, $code);
+            return $config;
 
         } else {
             $config->setAutoGenerateProxyClasses(true);
             $config->setMetadataCacheImpl(new ArrayCache());
             $config->setQueryCacheImpl(new ArrayCache());
+            return $config;
         }
+    }
 
+    /**
+     * @param $proxyPath
+     * @return mixed
+     */
+    private function createProxyDir($proxyPath) {
         $dir = $proxyPath;
         if (!FileUtils::isDir($dir)) {
             mkdir($dir);
+            return $dir;
         }
+        return $dir;
+    }
 
-        $config->setProxyDir($dir);
-        $class = StringUtils::replace($proxyPath, "/", "\\");
-        $namespace = StringUtils::substring($class, 1, strlen($class));
-
-        $config->setProxyNamespace("proxy");
-
+    /**
+     * @param $entityPackages
+     * @return array
+     */
+    private function convertPathToNamespaces($entityPackages) {
         $entityNamespaces = Collections::builder($entityPackages)
             ->map(StringFunctions::replace("/", "\\"))
             ->get();
-
-        $config->setEntityNamespaces($entityNamespaces);
-
-        $connectionParams = array(
-            'driver' => $dataConfig->getDriver(),
-            'host' => $dataConfig->getHost(),
-            'port' => $dataConfig->getPort(),
-            'user' => $dataConfig->getUsername(),
-            'password' => $dataConfig->getPassword(),
-            'dbname' => $dataConfig->getDbname(),
-            'charset' => $dataConfig->getCharset(),
-        );
-
-        return EntityManager::create($connectionParams, $config);
+        return $entityNamespaces;
     }
 
-    private static function createCache($namespace) {
-        $apcCache = new ApcuCache();
-        $apcCache->setNamespace($namespace . "_u_" . uniqid("s"));
-        return $apcCache;
+    /**
+     * @param DataSource $dataConfig
+     * @return array
+     * @throws \spark\common\IllegalStateException
+     */
+    private function getEntityPackages(DataSource $dataConfig) {
+        $entityPackages = $dataConfig->getEntityPackages();
+        Asserts::checkState(Objects::isArray($entityPackages), "entityPackages must be an Array");
+        return $entityPackages;
+    }
+
+    /**
+     * @return string
+     * @throws \spark\common\IllegalArgumentException
+     */
+    private function getProxyPath() {
+        $proxyPath = $this->config->getProperty("app.path") . "/src/proxy";
+        Asserts::notNull($proxyPath, "proxyPath cannot null");
+        return $proxyPath;
+    }
+
+    /**
+     * @param $entityPackages
+     * @param $proxyPath
+     * @return Configuration
+     */
+    private function buildDoctrineConfiguration($entityPackages, $proxyPath) {
+        $config = $this->createConfig($entityPackages);
+        $config->setProxyDir($this->createProxyDir($proxyPath));
+        $config->setEntityNamespaces($this->convertPathToNamespaces($entityPackages));
+        return $config;
     }
 
 }

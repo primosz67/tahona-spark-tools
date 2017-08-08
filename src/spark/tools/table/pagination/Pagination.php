@@ -3,6 +3,7 @@
 namespace spark\tools\table\pagination;
 
 use spark\tools\pagination\Sorting;
+use spark\utils\Collections;
 use spark\utils\StringUtils;
 
 class Pagination {
@@ -17,7 +18,7 @@ class Pagination {
     }
 
     public function hasSorting() {
-        return StringUtils::isNotBlank($this->sortingValue);
+        return Collections::isNotEmpty($this->sortingValue);
     }
 
 
