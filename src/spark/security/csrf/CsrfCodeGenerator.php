@@ -15,9 +15,14 @@ final class CsrfCodeGenerator {
         return PassUtils::genCode(8);
     }
 
-    public static function getSessionCode($code) {
+    public static function getSessionCode($code, $url = null) {
         if (Objects::isNotNull($code)) {
-            return UrlUtils::getCurrentUrl() . $code;
+
+            if (Objects::isNull($url)) {
+                $url = UrlUtils::getCurrentUrl();
+            }
+
+            return $url . $code;
         }
         return null;
     }
