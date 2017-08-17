@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use spark\Config;
 use spark\core\annotation\handler\EnableApcuAnnotationHandler;
+use spark\Engine;
 use spark\persistence\annotation\handler\EnableDataRepositoryAnnotationHandler;
 use spark\security\utils\PassUtils;
 use spark\utils\Asserts;
@@ -77,6 +78,14 @@ class EntityManagerFactory {
      * @return Configuration
      */
     private function createConfig($entityPackages) {
+        $appPath = $this->config->getProperty("app.path");
+
+        $entityPackages = Collections::builder()
+            ->addAll($entityPackages)
+            ->map(function ($x) use ($appPath) {
+               return $appPath."/src/".$x;
+            })->get();
+
         $driver = new AnnotationDriver(new AnnotationReader());
         $driver->addPaths($entityPackages);
 
