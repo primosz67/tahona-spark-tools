@@ -13,7 +13,8 @@ use Doctrine\ORM\EntityManager;
 use spark\common\IllegalArgumentException;
 use spark\common\IllegalStateException;
 use spark\Controller;
-use spark\persistence\EmBuilder;
+
+use spark\persistence\tools\EntityManagerFactory;
 use spark\persistence\tx\TransactionAware;
 use spark\Container;
 use spark\utils\Asserts;
@@ -26,7 +27,7 @@ class TransactionAwareController extends Controller {
      * @return EntityManager
      */
     protected  function getEm() {
-        return $this->get(EmBuilder::ENTITY_MANAGER);
+        return $this->get("entityManager");
     }
 
 }

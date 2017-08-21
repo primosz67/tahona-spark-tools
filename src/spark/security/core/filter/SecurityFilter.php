@@ -26,12 +26,6 @@ class SecurityFilter implements HttpFilter {
 
     /**
      * @Inject()
-     * @var AuthenticationService
-     */
-    private $authenticationService;
-
-    /**
-     * @Inject()
      * @var SecurityManager
      */
     private $securityManager;
