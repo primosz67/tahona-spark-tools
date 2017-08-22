@@ -2,9 +2,10 @@
 
 namespace spark\pdf;
 
+use spark\http\Response;
 use spark\view\ViewModel;
 
-class PdfViewModel extends ViewModel{
+class PdfViewModel implements Response{
     /**
      * @var null
      */

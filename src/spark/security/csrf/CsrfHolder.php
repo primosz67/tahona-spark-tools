@@ -14,15 +14,14 @@ class CsrfHolder {
     private $map = array();
 
     public function getCode($url) {
-
         $code = CsrfCodeGenerator::generate();
 
         $this->map[$url] = $code;
         return $code;
     }
 
-    public function check($csrf) {
-        $isValid = $this->isValid($csrf);
+    public function isValid($csrf) {
+        $isValid = $this->checkIsValid($csrf);
         $this->map = array();
         return $isValid;
     }
@@ -31,7 +30,7 @@ class CsrfHolder {
      * @param $csrf
      * @return bool
      */
-    private function isValid($csrf) {
+    private function checkIsValid($csrf) {
         $url = UrlUtils::getCurrentUrl();
 
         if (StringUtils::isBlank($csrf) || !Collections::hasKey($this->map, $url)) {

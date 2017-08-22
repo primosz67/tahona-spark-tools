@@ -30,9 +30,7 @@ class CsrfSecurityFilter implements HttpFilter {
             /** @var CsrfHolder $csrfHolder */
             $csrfHolder = $request->getSession()->get($this->formKey);
 
-//            var_dump($csrf, $csrfHolder);
-
-            if (!$csrfHolder->check($csrf)) {
+            if (Objects::isNull($csrfHolder) || !$csrfHolder->isValid($csrf)) {
                 throw new BadCsrfException();
             }
         }

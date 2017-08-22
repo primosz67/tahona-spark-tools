@@ -15,11 +15,11 @@ use spark\view\ViewModel;
 
 class PdfViewHandler extends ViewHandler{
 
-    public function isView(ViewModel $viewModel) {
+    public function isView($viewModel) {
         return $viewModel instanceof PdfViewModel;
     }
 
-    public function handleView(ViewModel $viewModel, Request $request) {
+    public function handleView($viewModel, Request $request) {
         /** @var \mPDF $mpdf */
         $mpdf = $viewModel->getMpdf();
         $mpdf->Output();
