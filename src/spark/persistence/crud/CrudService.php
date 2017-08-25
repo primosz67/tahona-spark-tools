@@ -5,13 +5,11 @@ namespace spark\persistence\crud;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityNotFoundException;
 use spark\common\Optional;
-use spark\tools\pagination\PaginationFactory;
-use spark\tools\pagination\PaginationParams;
 use spark\core\service\ServiceHelper;
+use spark\tools\pagination\PaginationParams;
 use spark\tools\pagination\SimplePagination;
 use spark\utils\Asserts;
 use spark\utils\Collections;
-use spark\utils\Objects;
 
 /**
  * Class CrudService
@@ -126,20 +124,12 @@ class CrudService extends ServiceHelper {
     }
 
     /**
-     * @deprecated
-     * @param PaginationParams $paginator
-     * @return \Doctrine\ORM\Tools\Pagination\Paginator
-     */
-    public function getPaginator(PaginationParams $paginator) {
-        return $this->getDAO()->getPaginator($paginator);
-    }
-
-    /**
      * @param PaginationParams $paginationParams
      * @return SimplePagination
      */
     public function getPagination(PaginationParams $paginationParams) {
-        return PaginationFactory::simplePagination($paginationParams, $this);
+        $paginator = $this->getDAO()->getPaginator($paginationParams);
+        return new SimplePagination($paginator, $paginationParams);
     }
 
 }

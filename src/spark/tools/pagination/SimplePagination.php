@@ -25,18 +25,18 @@ class SimplePagination {
 
 
     /**
-     * @var CrudService
+     * @var Paginator
      */
-    private $service;
+    private $paginator;
 
     private $isInitiated = false;
 
     private $pagesNumbers;
     private $pagesCount = 10;
 
-    function __construct($service, PaginationParams $paginatorParams) {
+    public function __construct(Paginator $paginator, PaginationParams $paginatorParams) {
         $this->paginatorParams = $paginatorParams;
-        $this->service = $service;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -51,8 +51,7 @@ class SimplePagination {
         if (false == $this->isInitiated) {
             $this->isInitiated = true;
 
-            /** @var $paginator Paginator */
-            $paginator = $this->service->getPaginator($this->paginatorParams);
+            $paginator = $this->paginator;
 
             $this->count = $paginator->count();
             $this->result = $paginator->getIterator();
