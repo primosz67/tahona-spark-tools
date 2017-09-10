@@ -148,6 +148,11 @@ class DataBinder {
         return $this->errorsHolder->getErrors();
     }
 
+
+//    public function hasErrors() {
+//        return Collections::isNotEmpty($this->getErrors());
+//    }
+
     public function isValid() {
         $errors = $this->getErrors();
         return empty($errors);

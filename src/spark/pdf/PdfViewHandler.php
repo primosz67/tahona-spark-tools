@@ -10,6 +10,7 @@ namespace spark\pdf;
 
 
 use spark\http\Request;
+use spark\core\routing\RequestData;
 use spark\view\ViewHandler;
 use spark\view\ViewModel;
 
@@ -19,7 +20,7 @@ class PdfViewHandler extends ViewHandler{
         return $viewModel instanceof PdfViewModel;
     }
 
-    public function handleView($viewModel, Request $request) {
+    public function handleView($viewModel, RequestData $request) {
         /** @var \mPDF $mpdf */
         $mpdf = $viewModel->getMpdf();
         $mpdf->Output();
