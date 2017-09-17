@@ -32,8 +32,8 @@ class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
         $contentTypes = $annotation->contentType;
         /** @var Media $media */
 
-
-        return $this->isAnyContentType($contentTypes, $media->getMediaType()) && FileSize::getSizeAsKB($media->getFileSize()) < $annotation->maxSize;
+        return $this->isAnyContentType($contentTypes, $media->getMediaType())
+            && FileSize::getSizeAsKB($media->getFileSize()) < $annotation->maxSize;
     }
 
     /**

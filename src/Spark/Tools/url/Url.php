@@ -67,8 +67,8 @@ class Url {
         return null;
     }
 
-    private function parseQuery($query) {
-        if (StringUtils::isNotBlank($query)) {
+    private function parseQuery(array  $query=null) {
+        if (Collections::isNotEmpty($query)) {
             $queries = StringUtils::split($query, "&");
             $res = array();
 

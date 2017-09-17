@@ -16,7 +16,7 @@ class AuthUser {
 
     private $additionalObject;
 
-    function __construct($username, $roles = array(), $additionalObject = null) {
+    public function __construct($username, $roles = array(), $additionalObject = null) {
         $this->username = $username;
         $this->roles = $roles;
         $this->additionalObject = $additionalObject;
