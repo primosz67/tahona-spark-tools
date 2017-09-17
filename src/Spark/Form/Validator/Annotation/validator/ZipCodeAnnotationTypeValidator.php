@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\ZipCode;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 use Spark\Utils\ValidatorUtils;
@@ -17,7 +18,7 @@ class ZipCodeAnnotationTypeValidator implements AnnotationTypeValidator {
 
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\ZipCode";
+        return ZipCode::class;
     }
 
     /**

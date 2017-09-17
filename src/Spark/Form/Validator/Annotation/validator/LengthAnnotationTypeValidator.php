@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\Length;
 use Spark\Utils\Collections;
 use Spark\Utils\Objects;
 use Spark\Utils\Predicates;
@@ -18,7 +19,7 @@ use Spark\Utils\ValidatorUtils;
 class LengthAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\Length";
+        return Length::class;
     }
 
     public function isValid($obj, $value, $annotation) {

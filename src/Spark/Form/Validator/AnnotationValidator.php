@@ -12,6 +12,7 @@ namespace Spark\Form\Validator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Spark\Common\IllegalArgumentException;
 use Spark\Core\Lang\LangMessageResource;
+use Spark\Form\Validator\Annotation\MediaFile;
 use Spark\Form\Validator\Annotation\Size;
 use Spark\Form\Validator\Annotation\validator\AnnotationTypeValidator;
 use Spark\Form\Validator\Annotation\validator\DateAnnotationTypeValidator;
@@ -62,16 +63,16 @@ class AnnotationValidator extends EntityValidator {
         $classNames = Objects::getClassNames($obj);
 
         return Collections::builder($classNames)
-            ->map(function($className){
+            ->map(function ($className) {
                 return new \ReflectionClass($className);
             })
-            ->filter(function($reflectionClass) use ($field){
+            ->filter(function ($reflectionClass) use ($field) {
                 return $reflectionClass->hasProperty($field);
             })
-            ->map(function($reflectionClass) use ($field){
+            ->map(function ($reflectionClass) use ($field) {
                 return $reflectionClass->getProperty($field);
             })
-            ->flatMap(function($reflectionProperty) use ($obj, $field, $value) {
+            ->flatMap(function ($reflectionProperty) use ($obj, $field, $value) {
                 return Collections::builder($this->annotationTypeValidators)
                     ->map($this->getValidateFunction($obj, $value, $reflectionProperty))
                     ->filter(Predicates::notNull())
@@ -131,7 +132,7 @@ class AnnotationValidator extends EntityValidator {
      *
      * @param $obj
      * @param $value
-     * @param $reflectionProperty
+     * @param $reflectionProperty \ReflectionProperty
      * @return \Closure which return messages or null
      */
     private function getValidateFunction($obj, $value, $reflectionProperty) {
@@ -142,6 +143,7 @@ class AnnotationValidator extends EntityValidator {
             if (Objects::isNotNull($annotation) && !$typeValidator->isValid($obj, $value, $annotation)) {
                 return $this->resolveMessage($annotation, $typeValidator->getAnnotationValues($annotation));
             }
+
             return null;
         };
     }

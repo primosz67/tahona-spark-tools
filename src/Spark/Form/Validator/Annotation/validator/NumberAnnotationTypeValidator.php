@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\Number;
 use Spark\Utils\MathUtils;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
@@ -18,7 +19,7 @@ class NumberAnnotationTypeValidator implements AnnotationTypeValidator {
 
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\Number";
+        return Number::class;
     }
 
     public function isValid($obj, $value, $annotation) {

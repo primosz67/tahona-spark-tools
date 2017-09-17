@@ -9,7 +9,6 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 use Spark\Form\Validator\Annotation\MediaFile;
-use Spark\Upload\FileObjectFactory;
 use Spark\Upload\FileSize;
 use Spark\Utils\Collections;
 use Spark\Utils\Objects;
@@ -19,7 +18,7 @@ use tahona\media\domain\Media;
 class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\MediaFile";
+        return MediaFile::class;
     }
 
     public function isValid($obj, $value, $annotation) {
@@ -33,8 +32,8 @@ class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
         $contentTypes = $annotation->contentType;
         /** @var Media $media */
 
-        return $this->isAnyContentType($contentTypes, $media->getMediaType())
-        && FileSize::getSizeAsKB($media->getFileSize()) < $annotation->maxSize;
+
+        return $this->isAnyContentType($contentTypes, $media->getMediaType()) && FileSize::getSizeAsKB($media->getFileSize()) < $annotation->maxSize;
     }
 
     /**

@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\Size;
 use Spark\Utils\Collections;
 use Spark\Utils\Objects;
 use Spark\Utils\Predicates;
@@ -18,7 +19,7 @@ use Spark\Utils\ValidatorUtils;
 class SizeAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\Size";
+        return Size::class;
     }
 
     public function isValid($obj, $value, $annotation) {

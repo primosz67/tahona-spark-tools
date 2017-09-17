@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\Date;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 use Spark\Utils\ValidatorUtils;
@@ -16,7 +17,7 @@ use Spark\Utils\ValidatorUtils;
 class DateAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\Date";
+        return Date::class;
     }
 
     /**

@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\NotNull;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 
@@ -16,7 +17,7 @@ class NotNullAnnotationTypeValidator implements AnnotationTypeValidator {
 
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\NotNull";
+        return NotNull::class;
     }
 
     /**

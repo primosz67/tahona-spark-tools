@@ -9,6 +9,7 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\Max;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 use Spark\Utils\ValidatorUtils;
@@ -16,7 +17,7 @@ use Spark\Utils\ValidatorUtils;
 class MaxAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\Max";
+        return Max::class;
     }
 
     public function isValid($obj, $value, $annotation) {

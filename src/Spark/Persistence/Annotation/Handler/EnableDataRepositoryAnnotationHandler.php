@@ -27,7 +27,7 @@ class EnableDataRepositoryAnnotationHandler extends AnnotationHandler {
     const DATA_REPOSITORY = "Spark.data.repository";
 
     public function __construct() {
-        $this->annotationName = "Spark\\persistence\\annotation\\RepositoryData";
+        $this->annotationName = RepositoryData::class;
     }
 
     public function handleClassAnnotations($annotations = array(), $class, \ReflectionClass $classReflection) {

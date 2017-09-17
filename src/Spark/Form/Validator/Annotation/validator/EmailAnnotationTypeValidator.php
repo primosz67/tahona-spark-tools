@@ -9,14 +9,14 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
-use Spark\Utils\Objects;
+use Spark\Form\Validator\Annotation\Email;
 use Spark\Utils\StringUtils;
 use Spark\Utils\ValidatorUtils;
 
 class EmailAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\Email";
+        return Email::class;
     }
 
     /**

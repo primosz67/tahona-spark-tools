@@ -9,13 +9,14 @@
 namespace Spark\Form\Validator\Annotation\validator;
 
 
+use Spark\Form\Validator\Annotation\NotBlank;
 use Spark\Utils\StringUtils;
 
 class NotBlankAnnotationTypeValidator implements AnnotationTypeValidator {
 
 
     public function getAnnotationClassName() {
-        return "Spark\\form\\validator\\annotation\\NotBlank";
+        return NotBlank::class;
     }
 
     /**
