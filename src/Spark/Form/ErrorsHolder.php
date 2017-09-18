@@ -16,12 +16,12 @@ class ErrorsHolder {
 
     private $errors = array();
 
-    public function addError($fieldPathParam, $errors) {
+    public function addError($fieldPathParam, array $errors) {
         Asserts::notNull($fieldPathParam);
         Asserts::checkArgument(Collections::isNotEmpty($errors), "Errors should not be empty.");
 
-        $this->errors[$fieldPathParam] = Collections::builder(array())
-            ->addAll(Collections::getValue($this->errors, $fieldPathParam))
+        $this->errors[$fieldPathParam] = Collections::stream()
+            ->addAll(Collections::getValueOrDefault($this->errors, $fieldPathParam, array()))
             ->addAll($errors)
             ->get();
     }
@@ -35,7 +35,7 @@ class ErrorsHolder {
     }
 
     public function addAllError($errors) {
-        $this->errors = Collections::builder()
+        $this->errors = Collections::stream()
             ->addAll($this->errors)
             ->addAll($errors)
             ->get();

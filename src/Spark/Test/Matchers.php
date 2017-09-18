@@ -11,6 +11,7 @@ use Spark\Utils\JsonUtils;
 use Spark\Utils\Objects;
 use Spark\Utils\ReflectionUtils;
 use Spark\Utils\StringFunctions;
+use Spark\Utils\StringPredicates;
 use Spark\Utils\StringUtils;
 
 class Matchers {
@@ -26,7 +27,7 @@ class Matchers {
         return function ($x) use ($stringClass) {
             $same = Collections::builder()
                 ->addAll(Objects::getClassNames($x))
-                ->anyMatch(StringFunctions::equals($stringClass));
+                ->anyMatch(StringPredicates::equals($stringClass));
 
             if (false == $same) {
                 $className = Objects::getClassName($x);

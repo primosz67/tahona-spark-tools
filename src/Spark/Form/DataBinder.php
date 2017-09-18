@@ -47,12 +47,10 @@ class DataBinder {
      * Params like $_POSt or commmon use RequestUtils::getPostParams();
      * @param $params array
      */
-    function __construct($params) {
+    public function __construct($params) {
         Asserts::notNull($params);
         $this->postParams = $params;
         $this->errorsHolder = new ErrorsHolder();
-
-//        Asserts::checkState(Collections::isNotEmpty($params), "Post data cannot be empty");
     }
 
     public function bind(&$object) {

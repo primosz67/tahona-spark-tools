@@ -20,7 +20,7 @@ class PaginationParamsFactory {
      * @param Criteria $criteria
      * @return PaginationParams
      */
-    public static function create($currentPage, $pageSize, Criteria $criteria = null, $sortingValue = null) {
+    public static function create(int $currentPage = 1, int $pageSize = 20, Criteria $criteria = null, $sortingValue = null) {
         $paginationParams = new PaginationParams();
         $paginationParams->setPageSize((int)$pageSize);
         $paginationParams->setCriteria($criteria);
@@ -28,7 +28,6 @@ class PaginationParamsFactory {
         $paginationParams->setCurrentPage((int)$currentPage);
         return $paginationParams;
     }
-
 
 
 }

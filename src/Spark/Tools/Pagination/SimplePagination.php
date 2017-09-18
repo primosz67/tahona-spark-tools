@@ -10,10 +10,12 @@ namespace Spark\Tools\Pagination;
 
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use IteratorAggregate;
 use Spark\Persistence\Crud\CrudService;
 use Spark\Utils\Objects;
+use Traversable;
 
-class SimplePagination {
+class SimplePagination implements IteratorAggregate {
 
     private $count;
     private $result;
@@ -167,5 +169,9 @@ class SimplePagination {
 
     public function getResultsCount() {
         return $this->count;
+    }
+
+    public function getIterator() {
+        return $this->getResults();
     }
 }
