@@ -17,7 +17,7 @@ class ExcelPHPReader {
     public function getAsArray($removeEmptyRows = false) {
         $inputFileType = PHPExcel_IOFactory::identify($this->fileName);
         $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-        $objReader->setReadDataOnly(true);
+//        $objReader->setReadDataOnly(true);
 
         $objPHPExcel = $objReader->load($this->fileName);
 
@@ -40,9 +40,9 @@ class ExcelPHPReader {
 
         if ($removeEmptyRows) {
             return $this->clearData($arrayData);
-        } else {
-            return $arrayData;
         }
+
+        return $arrayData;
     }
 
     /**
@@ -62,7 +62,7 @@ class ExcelPHPReader {
 
     private function isRowEmpty($row) {
         foreach ($row as $rowValue) {
-            if (false == is_null($rowValue)) {
+            if (null !== $rowValue) {
                 return false;
             }
         }

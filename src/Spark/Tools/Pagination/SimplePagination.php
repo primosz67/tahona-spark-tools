@@ -25,7 +25,6 @@ class SimplePagination implements IteratorAggregate {
      */
     private $paginatorParams;
 
-
     /**
      * @var Paginator
      */
@@ -91,18 +90,18 @@ class SimplePagination implements IteratorAggregate {
         $page = $this->paginatorParams->getCurrentPage();
         if ($this->hasNextPage()) {
             return $page + 1;
-        } else {
-            return $page;
         }
+
+        return $page;
     }
 
     public function getPreviousPage() {
         $page = $this->paginatorParams->getCurrentPage();
         if ($this->hasPreviousPage()) {
             return $page - 1;
-        } else {
-            return $page;
         }
+
+        return $page;
     }
 
     public function hasNextPage() {

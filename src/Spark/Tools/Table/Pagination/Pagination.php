@@ -25,14 +25,14 @@ class Pagination {
     /**
      * @param int $currentPage
      */
-    public function setCurrentPage($currentPage) {
+    public function setCurrentPage(int $currentPage) {
         $this->currentPage = $currentPage;
     }
 
     /**
      * @param int $pageSize
      */
-    public function setPageSize($pageSize) {
+    public function setPageSize(int $pageSize) {
         $this->pageSize = $pageSize;
     }
 

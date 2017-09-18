@@ -14,20 +14,13 @@ use Spark\Persistence\Criteria\Criteria;
 
 class PaginationParamsFactory {
 
-    /**
-     * @param $currentPage
-     * @param $pageSize
-     * @param Criteria $criteria
-     * @return PaginationParams
-     */
-    public static function create(int $currentPage = 1, int $pageSize = 20, Criteria $criteria = null, $sortingValue = null) {
+    public static function create(int $currentPage = 1, int $pageSize = 20, Criteria $criteria = null, $sortingValue = null): PaginationParams {
         $paginationParams = new PaginationParams();
-        $paginationParams->setPageSize((int)$pageSize);
+        $paginationParams->setPageSize($pageSize);
         $paginationParams->setCriteria($criteria);
 
-        $paginationParams->setCurrentPage((int)$currentPage);
+        $paginationParams->setCurrentPage($currentPage);
         return $paginationParams;
     }
-
 
 }

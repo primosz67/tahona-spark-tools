@@ -36,13 +36,13 @@ class CriteraBuilder {
     }
 
     /**
-     * @param $f
-     * @param $al
+     * @param $fpath
+     * @param $alias
      * @return $this CriteraBuilder
      */
-    public function join($f, $al) {
-        $this->alias = $al;
-        $this->criteria[] = Criterias::join($f, $al);
+    public function join($fpath, $alias) {
+        $this->alias = $alias;
+        $this->criteria[] = Criterias::join($fpath, $alias);
         return $this;
     }
 
