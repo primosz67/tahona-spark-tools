@@ -4,8 +4,8 @@ namespace Spark\Persistence\tx;
 use Spark\Common\IllegalStateException;
 
 /**
- * Created by PhpStorm.
- * User: primosz67
+ *
+ * 
  * Date: 25.08.15
  * Time: 20:19
  */

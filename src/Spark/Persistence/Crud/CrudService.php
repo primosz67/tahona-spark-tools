@@ -15,17 +15,7 @@ use Spark\Utils\Collections;
  * Class CrudService
  * @package Spark\persistence\crud
  */
-class CrudService extends ServiceHelper {
-
-    /**
-     *
-     * @var CrudDao
-     */
-    private $dao;
-
-    public function __construct($dao = null) {
-        $this->dao = $dao;
-    }
+abstract class CrudService extends ServiceHelper {
 
     /**
      * @param $id
@@ -48,10 +38,7 @@ class CrudService extends ServiceHelper {
     /**
      * @return CrudDao
      */
-    protected function getDAO() {
-        return $this->dao;
-    }
-
+    abstract protected function getDAO() ;
     /**
      * @deprecated
      * @param $id
