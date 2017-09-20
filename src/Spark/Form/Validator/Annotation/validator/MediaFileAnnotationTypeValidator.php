@@ -22,8 +22,7 @@ class MediaFileAnnotationTypeValidator implements AnnotationTypeValidator {
     }
 
     public function isValid($obj, $value, $annotation) {
-        return StringUtils::isBlank($value)
-        || Objects::isNull($value)
+        return Objects::isNull($value)
         || $this->validateFile($annotation, $value);
     }
 

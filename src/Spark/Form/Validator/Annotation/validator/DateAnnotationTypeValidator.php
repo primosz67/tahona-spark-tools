@@ -25,7 +25,8 @@ class DateAnnotationTypeValidator implements AnnotationTypeValidator {
      * @return boolean
      */
     public function isValid($obj, $value, $annotation) {
-        return StringUtils::isBlank($value) || ValidatorUtils::isDate($value);
+
+        return Objects::isNull($value) || ValidatorUtils::isDate($value);
     }
 
     public function getAnnotationValues($annotation) {

@@ -46,6 +46,7 @@ class Mailer implements ConfigAware {
             ->add('Content-type: text/html; charset=utf-8')
             ->add("To: " . $this->toMailHeader($mail->getTo()))
             ->add("From: " . $this->toMailHeader($mail->getFrom()))
+            ->add("List-Unsubscribe: <".$mail->getUnsubscribeUrl().">")
             ->get();
 
         mail($mail->getTo(), $mail->getTitle(), $mail->getContent(),

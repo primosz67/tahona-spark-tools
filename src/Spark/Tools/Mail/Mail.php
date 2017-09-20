@@ -26,6 +26,8 @@ class Mail {
     private $to;
     private $cc;
 
+    private $unsubscribeUrl;
+
     /**
      * @param mixed $cc
      */
@@ -105,5 +107,17 @@ class Mail {
     public function getTo() {
         return $this->to;
     }
+
+    public function getUnsubscribeUrl() {
+        return $this->unsubscribeUrl;
+    }
+
+    /**
+     * @param mixed $unsubscribeUrl
+     */
+    public function setUnsubscribeUrl($unsubscribeUrl) {
+        $this->unsubscribeUrl = $unsubscribeUrl;
+    }
+
 
 }

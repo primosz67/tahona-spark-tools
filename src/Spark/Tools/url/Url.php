@@ -2,7 +2,9 @@
 
 namespace Spark\Tools\url;
 
+use Spark\Common\Optional;
 use Spark\Utils\Collections;
+use Spark\Utils\FileUtils;
 use Spark\Utils\Functions;
 use Spark\Utils\Predicates;
 use Spark\Utils\StringFunctions;
@@ -25,8 +27,7 @@ class Url {
         $this->scheme = $arr["scheme"];
         $this->host = $arr["host"];
         $this->path = Collections::getValueOrDefault($arr, "path", "");
-        $this->queryParams = Collections::getValueOrDefault($arr, "query", array());
-        $this->queryParams = $this->parseQuery($this->queryParams);
+        $this->queryParams = $this->parseQuery($this->getQueryString($arr));
 
     }
 
@@ -54,7 +55,6 @@ class Url {
             foreach ($this->queryParams as $k => $q) {
                 $values[] = $k . "=" . $q;
             }
-
             return "?" . StringUtils::join("&", $values);
         }
         return null;
@@ -67,8 +67,9 @@ class Url {
         return null;
     }
 
-    private function parseQuery(array  $query=null) {
-        if (Collections::isNotEmpty($query)) {
+    private function parseQuery(string $query=null) {
+
+        if (StringUtils::isNotBlank($query)) {
             $queries = StringUtils::split($query, "&");
             $res = array();
 
@@ -98,6 +99,12 @@ class Url {
     public function addParam($key, $value) {
         $this->queryParams[$key] = $value;
         return $this;
+    }
+
+    private function getQueryString($arr){
+        return Optional::ofNullable($arr)
+            ->map(Functions::getArrayValue("query"))
+            ->orElse("");
     }
 
 }
