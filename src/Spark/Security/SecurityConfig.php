@@ -11,9 +11,6 @@ use Spark\Security\Core\SecurityManager;
 use Spark\Security\Core\Service\AuthenticationService;
 
 
-/**
- * @Configuration()
- */
 class SecurityConfig {
 
     /**

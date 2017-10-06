@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * 
+ *
  * Date: 28.06.14
  * Time: 02:26
  */
@@ -17,16 +17,18 @@ use Spark\Utils\ValidatorUtils;
 
 class Mail {
     const D_CONTENT = "content";
-    const D_FROM = "from";
-    const D_TITLE = "title";
+    const D_FROM    = "from";
+    const D_TITLE   = "title";
 
     private $title;
     private $content;
     private $from;
+    private $fromName;
     private $to;
-    private $cc;
 
+    private $cc;
     private $unsubscribeUrl;
+    private $toName;
 
     /**
      * @param mixed $cc
@@ -69,8 +71,17 @@ class Mail {
         }
 
         Asserts::checkArgument(Objects::isString($fromName), "fromName must be string");
-        $this->from = array($fromEmail => $fromName);
+        $this->from = $fromEmail;
+        $this->fromName = $fromName;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getToName() {
+        return $this->toName;
+    }
+
 
     /**
      * @return mixed
@@ -78,6 +89,14 @@ class Mail {
     public function getFrom() {
         return $this->from;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFromName() {
+        return $this->fromName;
+    }
+
 
     /**
      * @param mixed $title
@@ -96,9 +115,14 @@ class Mail {
     /**
      * @param String $to
      */
-    public function setTo($to) {
+    public function setTo($to, $toName = null) {
         Asserts::checkArgument(Objects::isString($to), "Recipient (to) need to be string");
+
+        if (StringUtils::isBlank($toName)) {
+            $toName = $to;
+        }
         $this->to = $to;
+        $this->toName = $toName;
     }
 
     /**
@@ -107,6 +131,7 @@ class Mail {
     public function getTo() {
         return $this->to;
     }
+
 
     public function getUnsubscribeUrl() {
         return $this->unsubscribeUrl;

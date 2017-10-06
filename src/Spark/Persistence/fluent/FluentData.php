@@ -22,7 +22,7 @@ class FluentData {
      */
     private $em;
 
-    function __construct($em) {
+    public function __construct($em) {
         $this->em = $em;
     }
 

@@ -19,7 +19,10 @@
     
     "php": ">=5.3", 
     "tahona/spark-mvc": "*",
-    "doctrine/orm": ">=v2.4.8"
+    "doctrine/orm": ">=v2.4.8",
+
+    "monolog/monolog": "1.23.0",
+    "phpmailer/phpmailer": "~6.0"
   },
 
   "autoload": {

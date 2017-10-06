@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * 
+ *
  * Date: 27.06.14
  * Time: 06:49
  */
@@ -26,36 +26,30 @@ class Mailer implements ConfigAware {
 
     const NAME = "mailer";
 
+    /**
+     * @var MailerConfig
+     */
+    private $configuration;
+    /**
+     * @var MailHandler
+     */
+    private $handler;
+
+    public function __construct(MailerConfig $configuration, MailHandler $handler) {
+        $this->configuration = $configuration;
+        $this->handler = $handler;
+    }
+
+
     public function send(Mail $mail) {
+        Asserts::checkArgument($this->isValid($mail), "Wrong email format!");
 
-        Asserts::checkArgument($this->isValid($mail), "Wrong email format");
-
-//            $message = new \Swift_Message();
-//            $message->setBcc($mail->getCc());
-//            $message->setSubject($mail->getTitle());
-//
-//            $message->setFrom($this->getEmail($mail->getFrom()));
-//            $message->setTo($this->getEmail($mail->getTo()));
-//            $message->setBody($mail->getContent(), "text/html");
-
-//            $mailTransport = new \Swift_SmtpTransport(null);
-//            $mailTransport->send($message);
-
-        $headers = Collections::builder()
-            ->add('MIME-Version: 1.0')
-            ->add('Content-type: text/html; charset=utf-8')
-            ->add("To: " . $this->toMailHeader($mail->getTo()))
-            ->add("From: " . $this->toMailHeader($mail->getFrom()))
-            ->add("List-Unsubscribe: <".$mail->getUnsubscribeUrl().">")
-            ->get();
-
-        mail($mail->getTo(), $mail->getTitle(), $mail->getContent(),
-            StringUtils::join("\r\n", $headers));
+        $this->handler->send($mail, $this->configuration);
     }
 
     public function sendMail($mailTO, $userName, $title, $content) {
         $mail = new Mail();
-        $mail->setTo(array($mailTO => $userName));
+        $mail->setTo($mailTO);
         $mail->setTitle($title);
         $mail->setContent($content);
 
@@ -68,18 +62,8 @@ class Mailer implements ConfigAware {
 
     private function isValid(Mail $mail) {
         return MailUtils::isToValid($mail->getTo())
-        || MailUtils::isToValid($mail->getFrom());
+            || MailUtils::isToValid($mail->getFrom());
 
     }
 
-    private function toMailHeader($mail) {
-        if (is_array($mail)) {
-            $mailList = array();
-            foreach ($mail as $mailValue => $mailText) {
-                $mailList[] = $mailText . " <" . $mailValue . ">,";
-            }
-            return StringUtils::join(",", $mailList);
-        }
-        return $mail;
-    }
 }
