@@ -27,12 +27,12 @@
 
   "autoload": {
     "psr-0": {
-      "spark\\": "src/"
+      "Spark\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-0": {
-      "spark\\": "src/"
+      "Spark\\": "src/"
     }
   }
 }
