@@ -6,10 +6,7 @@ use Spark\Core\Annotation\Inject;
 use Spark\Http\RequestProvider;
 use Spark\Http\Session;
 use Spark\Security\Csrf\CsrfHolder;
-use Spark\Security\Csrf\CsrfCodeGenerator;
-use Spark\Tools\url\Url;
 use Spark\Utils\Collections;
-use Spark\Utils\StringUtils;
 use Spark\Utils\UrlUtils;
 use Spark\View\Smarty\SmartyPlugin;
 
@@ -31,11 +28,11 @@ class CsrfSecurityViewSmartyPlugin implements SmartyPlugin {
         $this->formKey = $formKey;
     }
 
-    public function getTag() {
-        return "csrf";
+    public function getTag(): string {
+        return 'csrf';
     }
 
-    public function execute($params, $smarty) {
+    public function execute(array $params, $smarty): string {
         $request = $this->requestProvider->getRequest();
         $session = $request->getSession();
 
@@ -45,14 +42,12 @@ class CsrfSecurityViewSmartyPlugin implements SmartyPlugin {
         $key = $this->formKey;
         $session->add($key, $csrfHolder);
 
-
         return "<input name='$key' type='hidden' value='$code' />";
     }
 
     private function getUrl($params) {
-
-        if (Collections::hasKey($params, "path")) {
-            return UrlUtils::getSite() . $params["path"];
+        if (Collections::hasKey($params, 'path')) {
+            return UrlUtils::getSite() . $params['path'];
         }
         return UrlUtils::getCurrentUrl();
     }
@@ -61,7 +56,7 @@ class CsrfSecurityViewSmartyPlugin implements SmartyPlugin {
      * @param $session
      * @return CsrfHolder
      */
-    private function getOrCreateCsrfHolder(Session $session) {
+    private function getOrCreateCsrfHolder(Session $session): CsrfHolder {
         if ($session->has($this->formKey)) {
             return $session->get($this->formKey);
         }

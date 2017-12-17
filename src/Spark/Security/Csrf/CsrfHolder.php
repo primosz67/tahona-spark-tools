@@ -13,30 +13,31 @@ class CsrfHolder {
 
     private $map = array();
 
-    public function getCode($url) {
+    public function getCode($url): string {
         $code = CsrfCodeGenerator::generate();
-
         $this->map[$url] = $code;
         return $code;
     }
 
-    public function isValid($csrf) {
+    public function isValid($csrf): bool {
         $isValid = $this->checkIsValid($csrf);
-        $this->map = array();
+        if ($isValid) {
+            $this->removeCurrentCsrf();
+        }
         return $isValid;
     }
 
-    /**
-     * @param $csrf
-     * @return bool
-     */
-    private function checkIsValid($csrf) {
+    private function checkIsValid($csrf): bool {
         $url = UrlUtils::getCurrentUrl();
 
-        if (StringUtils::isBlank($csrf) || !Collections::hasKey($this->map, $url)) {
-            return false;
+        if (StringUtils::isNotBlank($csrf) || Collections::hasKey($this->map, $url)) {
+            return StringUtils::equals($csrf, $this->map[$url]);
         }
 
-        return StringUtils::equals($csrf, $this->map[$url]);
+        return false;
+    }
+
+    private function removeCurrentCsrf(): void {
+        Collections::removeByKey($this->map, UrlUtils::getCurrentUrl());
     }
 }

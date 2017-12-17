@@ -22,17 +22,26 @@ class CsrfSecurityFilter implements HttpFilter {
         $this->formKey = $formKey;
     }
 
+    /**
+     * @param Request $request
+     * @param FilterChain $filterChain
+     * @throws BadCsrfException
+     */
     public function doFilter(Request $request, FilterChain $filterChain) {
 
         if ($request->isPost()) {
             $csrf = $request->getParam($this->formKey);
 
             /** @var CsrfHolder $csrfHolder */
-            $csrfHolder = $request->getSession()->get($this->formKey);
+            $csrfHolder = $this->getCrsfHolder($request);
 
             if (Objects::isNull($csrfHolder) || !$csrfHolder->isValid($csrf)) {
-                throw new BadCsrfException();
+                throw new BadCsrfException('Bad Csrf for POST request');
             }
         }
+    }
+
+    private function getCrsfHolder(Request $request): CsrfHolder {
+        return $request->getSession()->get($this->formKey);
     }
 }
