@@ -8,7 +8,6 @@
 
 namespace Spark\Form;
 
-
 use Spark\Common\IllegalArgumentException;
 use Spark\Form\Converter\DataConverter;
 use Spark\Form\Validator\ArrayEntityValidator;
@@ -20,28 +19,23 @@ use Spark\Utils\Collections;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 
-class DataBinder {
+class DataBinder implements Errors {
 
     private $postParams = array();
     private $objectReferences = array();
-
     /**
      * @var EntityValidator
      */
     private $validators;
-
     /**
      * @var array
      */
     private $converters = array();
-
     /**
      * @var ErrorsHolder
      */
     private $errorsHolder;
-
     const SEPARATOR = "_";
-
 
     /**
      * Params like $_POSt or commmon use RequestUtils::getPostParams();
@@ -60,7 +54,6 @@ class DataBinder {
         $this->checkMissingParams($postParams);
 
         foreach ($postParams as $formParamKey => $value) {
-
             if (strpos($formParamKey, ".") > 0) {
                 $accessor = explode(".", $formParamKey);
                 $index = count($accessor) - 1;
@@ -71,7 +64,6 @@ class DataBinder {
                 if (isset($this->objectReferences[$accessObjectKey])) {
                     $objectToEdit = &$this->objectReferences[$accessObjectKey];
                 } else {
-
                     $objectToEdit = &$object;
 
                     for ($i = 0; $i < $index; $i++) {
@@ -198,5 +190,9 @@ class DataBinder {
             $errors = $this->validators->checkFieldExist($postParams);
             $this->errorsHolder->addAllError($errors);
         }
+    }
+
+    public function hasErrors(): bool {
+        return $this->errorsHolder->hasErrors();
     }
 }

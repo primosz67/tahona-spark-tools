@@ -8,22 +8,22 @@
 
 namespace Spark\Form;
 
-
 use Spark\Utils\Asserts;
 use Spark\Utils\Collections;
 
-class ErrorsHolder {
+class ErrorsHolder implements Errors {
 
     private $errors = array();
 
-    public function addError($fieldPathParam, array $errors) {
+    public function addError($fieldPathParam, array $errors = []) {
         Asserts::notNull($fieldPathParam);
-        Asserts::checkArgument(Collections::isNotEmpty($errors), "Errors should not be empty.");
 
-        $this->errors[$fieldPathParam] = Collections::stream()
-            ->addAll(Collections::getValueOrDefault($this->errors, $fieldPathParam, array()))
-            ->addAll($errors)
-            ->get();
+        if (Collections::isNotEmpty($errors)) {
+            $this->errors[$fieldPathParam] = Collections::stream()
+                ->addAll(Collections::getValueOrDefault($this->errors, $fieldPathParam, array()))
+                ->addAll($errors)
+                ->get();
+        }
     }
 
     public function clear() {
@@ -41,5 +41,7 @@ class ErrorsHolder {
             ->get();
     }
 
-
+    public function hasErrors(): bool {
+        return Collections::isNotEmpty($this->errors);
+    }
 }
