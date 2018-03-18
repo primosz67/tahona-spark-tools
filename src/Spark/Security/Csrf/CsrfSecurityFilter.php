@@ -3,9 +3,10 @@
 namespace Spark\Security\Csrf;
 
 use Spark\Core\Annotation\Inject;
-use Spark\Filter\FilterChain;
-use Spark\Filter\HttpFilter;
+use Spark\Core\Filter\FilterChain;
+use Spark\Core\Filter\HttpFilter;
 use Spark\Http\Request;
+use Spark\Http\ResponseHelper;
 use Spark\Security\Csrf\Exception\BadCsrfException;
 use Spark\Utils\Objects;
 
