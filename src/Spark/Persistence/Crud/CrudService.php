@@ -21,7 +21,7 @@ abstract class CrudService extends ServiceHelper {
      * @param $id
      * @return Optional
      */
-    public function find($id) {
+    public function find(int $id) {
         return Optional::ofNullable($this->getDAO()->findById($id));
     }
 
@@ -30,7 +30,7 @@ abstract class CrudService extends ServiceHelper {
      * @param $id
      * @return
      */
-    public function getById($id) {
+    public function getById(int $id) {
         $byId = $this->find($id);
         return $byId->orElseThrow(new EntityNotFoundException());
     }
@@ -81,8 +81,8 @@ abstract class CrudService extends ServiceHelper {
      * @throws \Exception
      * @throws \Spark\Common\IllegalArgumentException
      */
-    public function findOne($example = array()) {
-        Asserts::checkArgument(Collections::isNotEmpty($example), "Example must not be empty.");
+    public function findOne(array $example = array()): Optional {
+        Asserts::checkArgument(Collections::isNotEmpty($example), 'Example must not be empty.');
         return Optional::ofNullable($this->getDAO()->getOneByExample($example));
     }
 
@@ -90,16 +90,15 @@ abstract class CrudService extends ServiceHelper {
         return $this->getDAO()->getOneByExample($example);
     }
 
-    public function countByExample($example = array()) {
+    public function countByExample(array $example = array()): int {
         return $this->getDAO()->countByExample($example);
     }
 
-    public function findByIds($ids = array()) {
+    public function findByIds(array $ids = array()): ?array {
         if (count($ids) > 0) {
             return $this->getDAO()->findByIds($ids);
-        } else {
-            return array();
         }
+        return array();
     }
 
     public function remove($entity) {

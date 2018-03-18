@@ -136,7 +136,7 @@ abstract class CrudDao {
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
-    public function findByIds($ids = array()) {
+    public function findByIds(array $ids = array()): array {
         if (Collections::isEmpty($ids)){
             return array();
         }
