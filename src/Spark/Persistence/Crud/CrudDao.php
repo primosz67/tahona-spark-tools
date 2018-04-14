@@ -29,10 +29,6 @@ abstract class CrudDao {
      */
     private $entityManager;
 
-    public function __construct() {
-
-    }
-
     /**
      *
      * @return EntityManager
@@ -92,11 +88,10 @@ abstract class CrudDao {
      * @param array $orderBy array(property=>ASC)
      * @return array
      */
-    public function findByExample($example = array(), $orderBy = array(), $limit=null) {
+    public function findByExample($example = array(), $orderBy = array(), $limit = null) {
         return $this->getEm()->getRepository($this->getEntityName())
             ->findBy($example, $orderBy, $limit);
     }
-
 
     /**
      * @param $example
@@ -137,7 +132,7 @@ abstract class CrudDao {
     }
 
     public function findByIds(array $ids = array()): array {
-        if (Collections::isEmpty($ids)){
+        if (Collections::isEmpty($ids)) {
             return array();
         }
 
@@ -151,7 +146,7 @@ abstract class CrudDao {
     }
 
     public function remove($entity) {
-        $this->getEm()->transactional(function($em) use ($entity){
+        $this->getEm()->transactional(function ($em) use ($entity) {
             $em->remove($entity);
         });
     }
@@ -187,5 +182,4 @@ abstract class CrudDao {
         }
         return $qb;
     }
-
 }
