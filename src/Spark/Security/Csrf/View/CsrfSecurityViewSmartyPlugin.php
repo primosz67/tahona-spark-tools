@@ -1,6 +1,6 @@
 <?php
-namespace Spark\Security\Csrf\View;
 
+namespace Spark\Security\Csrf\View;
 
 use Spark\Core\Annotation\Inject;
 use Spark\Http\RequestProvider;
@@ -17,7 +17,6 @@ class CsrfSecurityViewSmartyPlugin implements SmartyPlugin {
      * @var RequestProvider
      */
     private $requestProvider;
-
     private $formKey;
 
     /**
@@ -37,9 +36,11 @@ class CsrfSecurityViewSmartyPlugin implements SmartyPlugin {
         $session = $request->getSession();
 
         $csrfHolder = $this->getOrCreateCsrfHolder($session);
-        $code = $csrfHolder->getCode($this->getUrl($params));
+        $url = $this->getUrl($params);
 
+        $code = $csrfHolder->generateCode($url);
         $key = $this->formKey;
+
         $session->add($key, $csrfHolder);
 
         return "<input name='$key' type='hidden' value='$code' />";
@@ -62,5 +63,4 @@ class CsrfSecurityViewSmartyPlugin implements SmartyPlugin {
         }
         return new CsrfHolder();
     }
-
 }

@@ -7,9 +7,9 @@ use Spark\Core\Filter\FilterChain;
 use Spark\Core\Filter\HttpFilter;
 use Spark\Http\Request;
 use Spark\Http\ResponseHelper;
+use Spark\Http\Utils\RequestUtils;
 use Spark\Security\Csrf\Exception\BadCsrfException;
 use Spark\Utils\Objects;
-
 
 class CsrfSecurityFilter implements HttpFilter {
 
@@ -32,17 +32,15 @@ class CsrfSecurityFilter implements HttpFilter {
 
         if ($request->isPost()) {
             $csrf = $request->getParam($this->formKey);
+            $session = $request->getSession();
 
             /** @var CsrfHolder $csrfHolder */
-            $csrfHolder = $this->getCrsfHolder($request);
+            $csrfHolder = $session
+                ->get($this->formKey);
 
             if (Objects::isNull($csrfHolder) || !$csrfHolder->isValid($csrf)) {
                 throw new BadCsrfException('Bad Csrf for POST request');
             }
         }
-    }
-
-    private function getCrsfHolder(Request $request): CsrfHolder {
-        return $request->getSession()->get($this->formKey);
     }
 }

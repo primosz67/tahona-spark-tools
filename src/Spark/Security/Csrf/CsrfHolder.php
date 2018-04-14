@@ -13,7 +13,7 @@ class CsrfHolder {
 
     private $map = array();
 
-    public function getCode($url): string {
+    public function generateCode($url): string {
         $code = CsrfCodeGenerator::generate();
         $this->map[$url] = $code;
         return $code;
