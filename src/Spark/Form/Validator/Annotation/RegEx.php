@@ -9,13 +9,9 @@ use Doctrine\ORM\Mapping;
  * @Annotation
  * @Target({"PROPERTY","ANNOTATION"})
  */
-final class RegExp implements Mapping\Annotation {
+final class RegEx implements Mapping\Annotation {
 
     /** @var string */
-    public $errorCode = "error.message.lenght";
-
-    public $maxLength = null;
-    public $minLength = null;
-    public $length = null;
-
+    public $errorCode = "error.message.regex";
+    public $value = null;
 }
