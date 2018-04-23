@@ -15,7 +15,7 @@ final class MediaFile implements Mapping\Annotation {
     public $errorCode = "error.message.media.file";
 
     /**
-     * @var array (start with comparison)
+     * @var array (start with comparison)  example: "image" or "image/png"
      */
     public $contentType = array();
 

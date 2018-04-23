@@ -47,7 +47,7 @@ class DataBinder implements Errors {
         $this->errorsHolder = new ErrorsHolder();
     }
 
-    public function bind(&$object) {
+    public function bind(&$object): Errors {
         $this->errorsHolder->clear();
 
         $postParams = $this->filterKeys($this->postParams);
@@ -96,6 +96,7 @@ class DataBinder implements Errors {
                 $this->setValue($objectToEdit, $formParamKey, $value);
             }
         }
+        return $this;
     }
 
     /**

@@ -1,13 +1,12 @@
 <?php
 /**
  *
- * 
+ *
  * Date: 25.06.14
  * Time: 08:36
  */
 
 namespace Spark\Security\Core\Service;
-
 
 use Spark\Common\IllegalArgumentException;
 use Spark\Http\Utils\CookieUtils;
@@ -21,9 +20,8 @@ use Spark\Utils\Objects;
 
 class AuthenticationService {
 
-    const NAME = "authenticationService";
-
-    const LOGGED_USER_SESSION_KEY = "spark_loggedUser";
+    public const NAME = 'authenticationService';
+    public const LOGGED_USER_SESSION_KEY = 'spark_loggedUser';
 
     /**
      * @param string $userName
@@ -59,15 +57,14 @@ class AuthenticationService {
 
     /**
      * @return AuthUser
+     * @throws IllegalArgumentException
      */
-    public function getAuthUser() {
+    public function getAuthUser(): AuthUser {
         if ($this->isLogged()) {
             $session = RequestUtils::getOrCreateSession();
             return $session->get(self::LOGGED_USER_SESSION_KEY);
-
-        } else {
-            throw new IllegalArgumentException("No auth user in session");
         }
-    }
 
+        throw new IllegalArgumentException('No auth user in session');
+    }
 }
