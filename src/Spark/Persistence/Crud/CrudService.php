@@ -21,10 +21,9 @@ abstract class CrudService extends ServiceHelper {
      * @param $id
      * @return Optional
      */
-    public function find(int $id) {
+    public function find(int $id): Optional {
         return Optional::ofNullable($this->getDAO()->findById($id));
     }
-
 
     /**
      * @param $id
@@ -38,7 +37,8 @@ abstract class CrudService extends ServiceHelper {
     /**
      * @return CrudDao
      */
-    abstract protected function getDAO() ;
+    abstract protected function getDAO();
+
     /**
      * @deprecated
      * @param $id
@@ -117,5 +117,4 @@ abstract class CrudService extends ServiceHelper {
         $paginator = $this->getDAO()->getPaginator($paginationParams);
         return new SimplePagination($paginator, $paginationParams);
     }
-
 }
