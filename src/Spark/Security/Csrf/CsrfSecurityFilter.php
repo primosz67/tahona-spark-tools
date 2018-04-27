@@ -46,6 +46,8 @@ class CsrfSecurityFilter implements HttpFilter {
                 throw new BadCsrfException('Bad Csrf for POST request');
             }
         }
+
+        $filterChain->doFilter($request);
     }
 
     public function exclude(array $paths): void {

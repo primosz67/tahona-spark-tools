@@ -14,6 +14,6 @@ use Spark\Common\Exception\AbstractException;
 class AccessDeniedException extends AbstractException{
 
     protected function getAlternativeMessage() {
-        return "Access denied.";
+        return 'Access denied.';
     }
 }

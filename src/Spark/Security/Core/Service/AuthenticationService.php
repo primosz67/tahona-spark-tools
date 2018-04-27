@@ -52,7 +52,7 @@ class AuthenticationService {
         /** @var $session Session */
         $session = RequestUtils::getSession();
         $session->remove(self::LOGGED_USER_SESSION_KEY);
-        CookieUtils::removeCookie(RequestUtils::SESSION_NAME);
+        CookieUtils::removeCookie(session_name());
     }
 
     /**
@@ -64,7 +64,7 @@ class AuthenticationService {
             $session = RequestUtils::getOrCreateSession();
             return $session->get(self::LOGGED_USER_SESSION_KEY);
         }
-
+        $this->removeUser();
         throw new IllegalArgumentException('No auth user in session');
     }
 }

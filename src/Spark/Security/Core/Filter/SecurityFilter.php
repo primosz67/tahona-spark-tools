@@ -30,6 +30,11 @@ class SecurityFilter implements HttpFilter {
      */
     private $securityManager;
 
+    /**
+     * @param Request $request
+     * @param FilterChain $filterChain
+     * @throws AccessDeniedException
+     */
     public function doFilter(Request $request, FilterChain $filterChain) {
         $hasUserAccess = $this->securityManager->hasAccess($request);
 
