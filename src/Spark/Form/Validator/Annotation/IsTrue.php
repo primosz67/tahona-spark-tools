@@ -6,15 +6,13 @@ use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\ORM\Mapping;
 
 /**
- *  size of String, Collection, Array
- *
- *
+ * Minimal value
  * @Annotation
  * @Target({"PROPERTY","ANNOTATION"})
  */
-final class Number implements Mapping\Annotation {
+final class IsTrue implements Mapping\Annotation {
 
-    /** @var string */
-    public $errorCode = 'error.message.number';
+    public $errorCode = 'error.message.true';
+
 
 }

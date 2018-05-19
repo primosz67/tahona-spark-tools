@@ -16,7 +16,7 @@ class ToBooleanConverter implements DataConverter {
 
     public function convert($obj, $value) {
         if (Objects::isNotNull($value)) {
-            return StringUtils::equalsIgnoreCase("true", $value);
+            return StringUtils::equalsIgnoreCase('true', $value);
         }
         return false;
     }

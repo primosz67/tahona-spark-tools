@@ -21,6 +21,8 @@ use Spark\Utils\StringUtils;
 
 class DataBinder implements Errors {
 
+    public const SEPARATOR = '_';
+
     private $postParams = array();
     private $objectReferences = array();
     /**
@@ -35,7 +37,6 @@ class DataBinder implements Errors {
      * @var ErrorsHolder
      */
     private $errorsHolder;
-    const SEPARATOR = "_";
 
     /**
      * Params like $_POSt or commmon use RequestUtils::getPostParams();
