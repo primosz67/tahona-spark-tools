@@ -29,7 +29,7 @@ abstract class CrudService extends ServiceHelper {
      * @param $id
      * @return
      */
-    public function getById(int $id) {
+    public function getById($id) {
         $byId = $this->find($id);
         return $byId->orElseThrow(new EntityNotFoundException());
     }
