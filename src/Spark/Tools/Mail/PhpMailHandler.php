@@ -9,10 +9,10 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Spark\Core\Annotation\Inject;
 use Spark\Core\Annotation\PostConstruct;
+use Spark\Logger\LoggerFactory;
 use Spark\Utils\FilterUtils;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
-use tahona\core\logger\LoggerFactory;
 
 class PhpMailHandler implements MailHandler {
 
@@ -60,7 +60,6 @@ class PhpMailHandler implements MailHandler {
             if (Objects::isNotNull($mailData->getCc())) {
                 $mail->addCC($mailData->getCc());
             }
-//            $mail->addBCC('bcc@example.com');
 
             //Attachments
 //            $mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
@@ -74,12 +73,12 @@ class PhpMailHandler implements MailHandler {
 
             $mail->send();
 
-            $this->logger->info('Message has been sent');
+            $this->logger->info('Message has been sent to '. $mailData->getTo());
 
         } catch (Exception $e) {
-            $this->logger->info($e->getMessage());
-            $this->logger->info($e->getTraceAsString());
-            $this->logger->info($mail->ErrorInfo);
+            $this->logger->error($e->getMessage());
+            $this->logger->error($e->getTraceAsString());
+            $this->logger->error($mail->ErrorInfo);
         }
     }
 }
