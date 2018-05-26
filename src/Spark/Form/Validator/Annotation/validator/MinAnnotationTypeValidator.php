@@ -14,6 +14,9 @@ use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 use Spark\Utils\ValidatorUtils;
 
+/**
+ * Check numbers - value >= annotation - min value
+ */
 class MinAnnotationTypeValidator implements AnnotationTypeValidator {
 
 

@@ -14,6 +14,9 @@ use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 use Spark\Utils\ValidatorUtils;
 
+/**
+ * Check numbers - value <= annotation - max value
+ */
 class MaxAnnotationTypeValidator implements AnnotationTypeValidator {
 
     public function getAnnotationClassName() {
