@@ -10,6 +10,7 @@ namespace Spark\Security\Core;
 
 
 use Spark\Core\Annotation\Inject;
+use Spark\Core\Routing\RequestData;
 use Spark\Core\Routing\RoutingDefinition;
 use Spark\Http\Request;
 use Spark\Http\RequestProvider;
@@ -39,13 +40,13 @@ class SecurityManager {
 
     /**
      * Return roles for current request
-     * @param Request $request
+     * @param RequestData $request
      * @return array|null
      */
-    public function getAuthorizedRoles(Request $request) {
-        $roles = $this->getRolesForMethod($request);
-        $rolesForClass = $this->getRolesForClass($request);
-        return Objects::isNotNull($roles) ? $roles : $rolesForClass;
+    public function getAuthorizedRoles($request): ?array {
+        $controllerName = $request->getControllerClassName();
+        $methodName = $request->getMethodName();
+        return $this->getRoles($controllerName, $methodName);
     }
 
     public function addClassRoles($className, $roles) {
@@ -119,8 +120,8 @@ class SecurityManager {
      * @param Request $request
      * @return array|null
      */
-    private function getRolesForMethod(Request $request) {
-        $key = $this->buildKey($request->getControllerClassName(), $request->getMethodName());
+    private function getRolesForMethod($controllerName, $methodName): ?array {
+        $key = $this->buildKey($controllerName, $methodName );
         $value = Collections::getValue($this->methodDefinitions, $key);
         return $value;
     }
@@ -130,7 +131,18 @@ class SecurityManager {
      * @param Request $request
      * @return array|null
      */
-    private function getRolesForClass(Request $request) {
-        return Collections::getValue($this->classDefinitions, $request->getControllerClassName());
+    private function getRolesForClass($controllerName) {
+        return Collections::getValue($this->classDefinitions, $controllerName);
+    }
+
+    /**
+     * @param $controllerName
+     * @param $methodName
+     * @return array|null
+     */
+    public function getRoles($controllerName, $methodName) {
+        $roles = $this->getRolesForMethod($controllerName, $methodName);
+        $rolesForClass = $this->getRolesForClass($controllerName);
+        return Objects::isNotNull($roles) ? $roles : $rolesForClass;
     }
 }
