@@ -59,10 +59,10 @@ abstract class CrudService extends ServiceHelper {
     /**
      * @param array $example
      * @param array $orderBy
-     * @return Collection
+     * @return array
      */
-    public function findByExample($example = array(), $orderBy = array()) {
-        return $this->getDAO()->findByExample($example, $orderBy);
+    public function findByExample($example = array(), $orderBy = array(), $limit = null) {
+        return $this->getDAO()->findByExample($example, $orderBy, $limit);
     }
 
     /**
