@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * 
+ *
  * Date: 05.08.14
  * Time: 06:47
  */
@@ -64,11 +64,9 @@ class CriteriaHandler {
      * @param Criteria $cr
      * @param QueryBuilder $qb
      */
-    private static function handleSimpleLike(Criteria $cr, QueryBuilder &$qb, &$parameters) {
-        if ($cr instanceof EqCriteria) {
+    private static function handleSimpleLike(Criteria $criteria, QueryBuilder &$qb, &$parameters) {
+        if ($criteria instanceof EqCriteria) {
             /** @var $criteria EqCriteria */
-            $criteria = $cr;
-
             $value = $criteria->getValue();
 
             if (Objects::isNotNull($value)) {
@@ -81,9 +79,17 @@ class CriteriaHandler {
                     return self::addLikeExpression($qb, $criteria, $index);
                 }
             }
+        } else if ($criteria instanceof InstanceOfCriteria) {
+            /** @var $criteria InstanceOfCriteria */
+            $value = $criteria->getValue();
+            if (Objects::isNotNull($value)) {
+                return $qb->expr()->isInstanceOf(self::ROOT_ALIAS, $criteria->getValue());
+
+            }
         }
         return null;
     }
+
 
     /**
      * @param $parameters
@@ -106,7 +112,7 @@ class CriteriaHandler {
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     private static function addEqExpression(QueryBuilder &$qb, $criteria, $index = 0) {
-        return $qb->expr()->eq(self::createProperty($criteria), ":".$criteria->getProperty()."_".$index);
+        return $qb->expr()->eq(self::createProperty($criteria), ":" . $criteria->getProperty() . "_" . $index);
     }
 
     /**
@@ -128,7 +134,7 @@ class CriteriaHandler {
      * @return \Doctrine\ORM\Query\Expr\Comparison
      */
     private static function addLikeExpression(QueryBuilder &$qb, $criteria, $index = 0) {
-        return $qb->expr()->like(self::createProperty($criteria), ":".$criteria->getProperty()."_".$index);
+        return $qb->expr()->like(self::createProperty($criteria), ":" . $criteria->getProperty() . "_" . $index);
     }
 
     /**
@@ -193,9 +199,9 @@ class CriteriaHandler {
         foreach ($parameters as $key => $v) {
             if (Objects::isArray($v)) {
                 foreach ($v as $index => $value) {
-                    $qb->setParameter($key."_".$index, $value);
+                    $qb->setParameter($key . "_" . $index, $value);
                 }
-            }else {
+            } else {
                 $qb->setParameter($key, $v);
             }
         }

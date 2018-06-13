@@ -39,6 +39,10 @@ class Criterias {
         return new SimpleLikeCriteria($property, $value, $alias);
     }
 
+    public static function instanceOf($value, $alias = "") {
+        return new InstanceOfCriteria( $value, $alias);
+    }
+
     public static function eq($property, $value, $alias = "") {
         return new EqCriteria($property, $value, $alias);
     }

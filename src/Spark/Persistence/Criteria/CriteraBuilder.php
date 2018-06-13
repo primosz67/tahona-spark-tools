@@ -65,4 +65,9 @@ class CriteraBuilder {
     private function getAlias() {
         return StringUtils::isBlank($this->alias)? "" : $this->alias;
     }
+
+    public function instanceOf ($class) {
+        $this->criteria[] = Criterias::instanceOf($class, $this->getAlias());
+        return $this;
+    }
 }
