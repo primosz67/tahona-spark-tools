@@ -9,10 +9,10 @@ use Spark\Common\Exception\AbstractException;
 class EntityNotFoundException extends AbstractException{
 
     protected function getAlternativeMessage() {
-        return "Entity not found!";
+        return 'Entity not found!';
     }
 
     public static function notFound() {
-        return new EntityNotFoundException();
+        return new self();
     }
 }

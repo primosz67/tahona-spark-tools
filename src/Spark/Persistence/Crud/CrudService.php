@@ -3,9 +3,9 @@
 namespace Spark\Persistence\Crud;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityNotFoundException;
 use Spark\Common\Optional;
 use Spark\Core\Service\ServiceHelper;
+use Spark\Persistence\exception\EntityNotFoundException;
 use Spark\Tools\Pagination\PaginationParams;
 use Spark\Tools\Pagination\SimplePagination;
 use Spark\Utils\Asserts;
@@ -31,7 +31,7 @@ abstract class CrudService extends ServiceHelper {
      */
     public function getById($id) {
         $byId = $this->find($id);
-        return $byId->orElseThrow(new EntityNotFoundException());
+        return $byId->orElseThrow(EntityNotFoundException::notFound());
     }
 
     /**

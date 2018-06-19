@@ -10,9 +10,9 @@ namespace Spark\Persistence\fluent;
 
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityNotFoundException;
 use Spark\Common\IllegalStateException;
 use Spark\Common\Optional;
+use Spark\Persistence\exception\EntityNotFoundException;
 use Spark\Utils\Objects;
 
 class FluentData {
