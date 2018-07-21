@@ -13,6 +13,7 @@ use Spark\Utils\BooleanUtils;
 use Spark\Utils\Collections;
 use Spark\Utils\JsonUtils;
 use Spark\Utils\Objects;
+use Spark\Utils\StringUtils;
 
 class RedisClient {
 
@@ -85,15 +86,10 @@ class RedisClient {
      */
     private function invoke($action) {
         try {
-            $this->redis->connect(
-                $this->config->getHost(),
-                $this->config->getPort(),
-                $this->config->getTimeout(),
-                $this->config->getInterval());
-
+            $this->connectRedis();
+            $this->authenticateRedis();
             return $action();
         } catch (\Exception $e) {
-
             throw RedisException::wrap($e);
         }
     }
@@ -116,6 +112,22 @@ class RedisClient {
      */
     private function isCached($key) {
         return $this->cache !== null && $this->cache->has($key);
+    }
+
+    private function connectRedis(): void {
+        $this->redis->connect(
+            $this->config->getHost(),
+            $this->config->getPort(),
+            $this->config->getTimeout(),
+            $this->config->getInterval());
+    }
+
+    private function authenticateRedis(): void {
+        $password = $this->config->getPassword();
+
+        if (StringUtils::isNotBlank($password)) {
+            $this->redis->auth($password);
+        }
     }
 
 

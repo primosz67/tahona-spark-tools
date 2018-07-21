@@ -14,6 +14,7 @@ class RedisClientConfig {
     private $timeout;
     private $interval;
     private $objectTimeOut;
+    private $password;
 
     /**
      * @param $timeout - connection timeout 5 seconds
@@ -27,6 +28,16 @@ class RedisClientConfig {
         $this->interval = $interval;
         $this->objectTimeOut = $objectTimeOut;
     }
+
+    public function getPassword() {
+        return $this->password;
+    }
+
+    public function setPassword($password) {
+        $this->password = $password;
+    }
+
+
 
     public function getHost() {
         return $this->host;
