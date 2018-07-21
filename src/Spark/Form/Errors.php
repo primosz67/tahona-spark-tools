@@ -10,7 +10,7 @@ namespace Spark\Form;
 
 interface Errors {
 
-    public function getErrors();
+    public function getErrors(): array;
 
-    public function hasErrors() :bool ;
+    public function hasErrors(): bool;
 }

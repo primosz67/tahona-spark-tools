@@ -20,10 +20,10 @@ class DataSource {
     private $proxyPath;
     private $entityPackages = array();
 
-    private $driver = "pdo_mysql";
-    private $host = "localhost";
+    private $driver = 'pdo_mysql';
+    private $host = 'localhost';
     private $port = 3306;
-    private $charset = "utf8";
+    private $charset = 'utf8';
 
     /**
      * @param string $proxyPath

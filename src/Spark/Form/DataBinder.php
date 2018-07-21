@@ -136,16 +136,11 @@ class DataBinder implements Errors {
     /**
      * @return array
      */
-    public function getErrors() {
+    public function getErrors(): array {
         return $this->errorsHolder->getErrors();
     }
 
-
-//    public function hasErrors() {
-//        return Collections::isNotEmpty($this->getErrors());
-//    }
-
-    public function isValid() {
+    public function isValid(): bool {
         $errors = $this->getErrors();
         return empty($errors);
     }
@@ -172,10 +167,7 @@ class DataBinder implements Errors {
         return $value;
     }
 
-    /**
-     * @return array
-     */
-    private function filterKeys($params) {
+    private function filterKeys($params): array {
         $postParams = array();
         foreach ($params as $key => $v) {
             $fileteredKey = StringUtils::replace($key, self::SEPARATOR, ".");

@@ -30,7 +30,7 @@ class ErrorsHolder implements Errors {
         $this->errors = array();
     }
 
-    public function getErrors() {
+    public function getErrors() :array {
         return $this->errors;
     }
 

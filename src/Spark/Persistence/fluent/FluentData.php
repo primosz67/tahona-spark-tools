@@ -16,7 +16,7 @@ use Spark\Persistence\exception\EntityNotFoundException;
 use Spark\Utils\Objects;
 
 class FluentData {
-    const NAME = "fluentData";
+    const NAME = 'fluentData';
     /**
      * @var EntityManager
      */
