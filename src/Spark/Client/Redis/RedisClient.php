@@ -56,10 +56,11 @@ class RedisClient {
     public function put(string $key, $object, $time = null) {
         $this->invoke(function () use ($key, $object, $time) {
             $expireTime = Objects::defaultIfNull($time, $this->config->getObjectTimeOut());
+            $serializedObject = serialize($object);
             if (Objects::isNotNull($expireTime)) {
-                $this->redis->setex($key, $expireTime, serialize($object));
+                $this->redis->setex($key, $expireTime, $serializedObject);
             } else {
-                $this->redis->set($key, serialize($object));
+                $this->redis->set($key, $serializedObject);
             }
         });
     }
@@ -67,6 +68,7 @@ class RedisClient {
     public function remove(string $key): void {
         $this->invoke(function () use ($key) {
             $this->redis->del($key);
+            return true;
         });
     }
 
