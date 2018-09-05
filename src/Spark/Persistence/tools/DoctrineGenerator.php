@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\ORM\Tools\SchemaTool;
+use Spark\Common\Collection\FluentIterables;
 use Spark\Common\Exception\NotImplementedException;
 use Spark\Config;
 use Spark\Core\Annotation\Inject;
@@ -26,6 +27,7 @@ use Spark\Persistence\tools\DoctrineGeneratorConfiguration;
 use Spark\Utils\Asserts;
 use Spark\Utils\Collections;
 use Spark\Utils\FileUtils;
+use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
 
 class DoctrineGenerator {
@@ -71,17 +73,17 @@ class DoctrineGenerator {
 //        $classes = $driver->getAllClassNames();
         $metadata = $cmf->getAllMetadata();
 
-        $nameSpace = $param["entityPackages"][0];
+        $nameSpace = $param['entityPackages'][0];
         foreach ($metadata as $data) {
             $data->namespace = $nameSpace;
-            $data->name = $param["entityPackages"][0] . "\\" . $data->name;
+            $data->name = $param['entityPackages'][0] . "\\" . $data->name;
         }
 
         $generator = new EntityGenerator();
         $generator->setUpdateEntityIfExists(true);
         $generator->setGenerateStubMethods(true);
         $generator->setGenerateAnnotations(true);
-        $generator->generate($metadata, \Spark\Engine::getRootPath() . "/src/" . $nameSpace);
+        $generator->generate($metadata, \Spark\Engine::getRootPath() . '/src/' . $nameSpace);
 
         print 'Done!';
     }
@@ -91,44 +93,69 @@ class DoctrineGenerator {
      * @param DoctrineGeneratorConfiguration $configuration
      * @return DoctrineGenerateResult
      */
-    public function updateSchema(DoctrineGeneratorConfiguration $configuration, $packages=array()) {
+    public function updateSchema(DoctrineGeneratorConfiguration $configuration, $packages = array()) {
         $dbConfig = $configuration->getDbConfig();
         $em = $this->entityManagerFactor->createEntityManager($dbConfig);
         $genResult = new DoctrineGenerateResult();
 
         foreach ($packages as $namespace) {
-            $entitiesFilePath = StringUtils::replace("src/" . $namespace, "\\", "/");
+            $entitiesFilePath = StringUtils::replace('src/' . $namespace, "\\", '/');
+            $appParamPaths = $this->getAppParamPaths();
 
-            $path = $this->config->getProperty("app.path"). "/" . $entitiesFilePath;
+            foreach ($appParamPaths as $appParamPath) {
+                $path = $appParamPath . '/' . $entitiesFilePath;
 
-            Asserts::checkArgument(FileUtils::isDir($path), "DB Generator: Path not exist $path. Check Config ");
-            $fileList = FileUtils::getFileList($path);
-            $classes = array();
+                if (FileUtils::isDir($path)) {
+                    $fileList = FileUtils::getFileList($path);
 
-            $schemaTool = new SchemaTool($em);
+                    $classes = array();
 
-            $className = "";
+                    $schemaTool = new SchemaTool($em);
 
-            foreach ($fileList as $filePath) {
-                try {
-                    $filePath = StringUtils::replace($filePath, ".php", "");
-                    $namespace = StringUtils::replace($namespace, "/", "\\");
+                    $className = '';
 
-                    $className = $namespace . "\\" . $filePath;
+                    foreach ($fileList as $filePath) {
+                        try {
+                            $filePath = StringUtils::replace($filePath, '.php', '');
+                            $namespace = StringUtils::replace($namespace, '/', "\\");
 
-                    $classes[] = $em->getClassMetadata($className);
+                            $className = $namespace . "\\" . $filePath;
 
-                    $schemaTool->updateSchema($classes, true);
+                            $classes[] = $em->getClassMetadata($className);
 
-                    $genResult->addMessage("", "Updated", $className);
+                            $schemaTool->updateSchema($classes, true);
 
-                } catch (\Exception $e) {
-                    $genResult->addMessage($e->getMessage(), "Error", $className);
+                            $genResult->addMessage('', 'Updated', $className);
+
+                        } catch (\Exception $e) {
+                            $genResult->addMessage($e->getMessage(), 'Error', $className);
+                        }
+                    }
                 }
+
             }
+
         }
 
         return $genResult;
+    }
+
+    private function checkPathAppParam(array $paths): void {
+        FluentIterables::of($paths)
+            ->each(function ($singlePath) {
+                $this->checkPath($singlePath);
+            });
+
+    }
+
+    private function checkPath($path): void {
+        Asserts::checkArgument(FileUtils::isDir($path), "DB Generator: Path not exist $path. Check Config ");
+    }
+
+    private function getAppParamPaths(): array {
+        $appParamPaths = (array)$this->config->getProperty('app.paths');
+        $this->checkPathAppParam($appParamPaths);
+        return $appParamPaths;
     }
 
 
