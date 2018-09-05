@@ -8,7 +8,6 @@ namespace Spark\Persistence\Migration;
 
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Spark\Utils\DateUtils;
 use Spark\Utils\Objects;
 
