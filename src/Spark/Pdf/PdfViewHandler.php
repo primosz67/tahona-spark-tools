@@ -14,13 +14,13 @@ use Spark\Core\Routing\RequestData;
 use Spark\View\ViewHandler;
 use Spark\View\ViewModel;
 
-class PdfViewHandler extends ViewHandler{
+class PdfViewHandler extends ViewHandler {
 
-    public function isView($viewModel) {
+    public function isView($viewModel): bool {
         return $viewModel instanceof PdfViewModel;
     }
 
-    public function handleView($viewModel, RequestData $request) {
+    public function handleView($viewModel, RequestData $request): void {
         /** @var \mPDF $mpdf */
         $mpdf = $viewModel->getMpdf();
         $mpdf->Output();

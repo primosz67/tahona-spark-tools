@@ -55,8 +55,8 @@ class DataBinder implements Errors {
         $this->checkMissingParams($postParams);
 
         foreach ($postParams as $formParamKey => $value) {
-            if (strpos($formParamKey, ".") > 0) {
-                $accessor = explode(".", $formParamKey);
+            if (strpos($formParamKey, '.') > 0) {
+                $accessor = explode('.', $formParamKey);
                 $index = count($accessor) - 1;
 
                 $accessObjectKey = $this->getAccessObjectKey($accessor);
@@ -69,7 +69,7 @@ class DataBinder implements Errors {
 
                     for ($i = 0; $i < $index; $i++) {
                         $propertyName = $accessor[$i];
-                        if (Objects::hasMethod($objectToEdit, "get" . ucfirst($propertyName))) {
+                        if (Objects::hasMethod($objectToEdit, 'get' . ucfirst($propertyName))) {
                             $newObj = Objects::invokeGetMethod($objectToEdit, $propertyName);
                             $objectToEdit = &$newObj;
                         }
@@ -106,7 +106,7 @@ class DataBinder implements Errors {
      * @param $value
      */
     private function setValue(&$object, $fields, $value) {
-        $methodName = "set" . ucfirst($fields);
+        $methodName = 'set' . ucfirst($fields);
 
         try {
             if (method_exists($object, $methodName)) {
@@ -119,7 +119,7 @@ class DataBinder implements Errors {
     private function getAccessObjectKey($accessor) {
         $size = count($accessor) - 1;
 
-        $key = "";
+        $key = '';
         for ($i = 0; $i < $size; $i++) {
             $key .= $accessor[$i];
         }
@@ -154,7 +154,7 @@ class DataBinder implements Errors {
     }
 
     public function setDataConverters($converters = array()) {
-        Asserts::checkArgument(Objects::isArray($converters), "Parameter needs to be Array");
+        Asserts::checkArgument(Objects::isArray($converters), 'Parameter needs to be Array');
         $this->converters = $converters;
     }
 
@@ -170,7 +170,7 @@ class DataBinder implements Errors {
     private function filterKeys($params): array {
         $postParams = array();
         foreach ($params as $key => $v) {
-            $fileteredKey = StringUtils::replace($key, self::SEPARATOR, ".");
+            $fileteredKey = StringUtils::replace($key, self::SEPARATOR, '.');
             $postParams[$fileteredKey] = $v;
         }
         return $postParams;
