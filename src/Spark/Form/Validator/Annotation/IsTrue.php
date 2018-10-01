@@ -11,8 +11,5 @@ use Doctrine\ORM\Mapping;
  * @Target({"PROPERTY","ANNOTATION"})
  */
 final class IsTrue implements Mapping\Annotation {
-
     public $errorCode = 'error.message.true';
-
-
 }

@@ -12,6 +12,6 @@ use Doctrine\ORM\Mapping;
 final class Date implements Mapping\Annotation {
 
     /** @var string */
-    public $errorCode = "error.message.date";
+    public $errorCode = 'error.message.date';
 
 }

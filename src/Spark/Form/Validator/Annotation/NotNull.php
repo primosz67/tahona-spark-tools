@@ -12,6 +12,6 @@ use Doctrine\ORM\Mapping;
 final class NotNull implements Mapping\Annotation {
 
     /** @var string */
-    public $errorCode = "error.message.not.null";
+    public $errorCode = 'error.message.not.null';
 
 }

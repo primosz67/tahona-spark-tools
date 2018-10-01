@@ -80,8 +80,6 @@ class AnnotationValidator extends EntityValidator {
                     ->get();
             })
             ->get();
-
-
     }
 
     /**
@@ -115,7 +113,7 @@ class AnnotationValidator extends EntityValidator {
         $this->annotationTypeValidators[] = $annotationTypeValidator;
     }
 
-    public function addDefaultValidators() {
+    public function addDefaultValidators(): void {
         $this->addAnnotationTypeValidator(new NotBlankAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new NotNullAnnotationTypeValidator());
         $this->addAnnotationTypeValidator(new EmailAnnotationTypeValidator());

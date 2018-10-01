@@ -21,7 +21,7 @@ abstract class CrudService extends ServiceHelper {
      * @param $id
      * @return Optional
      */
-    public function find(int $id): Optional {
+    public function find($id): Optional {
         return Optional::ofNullable($this->getDAO()->findById($id));
     }
 

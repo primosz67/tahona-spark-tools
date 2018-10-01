@@ -36,7 +36,7 @@ interface FluentData {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
      */
-    public function get(string $class, $id): object;
+    public function get(string $class, $id);
 
     public function detach($obj);
 

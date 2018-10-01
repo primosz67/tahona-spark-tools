@@ -106,7 +106,7 @@ abstract class CrudDao {
             ->findBy($example);
 
         if (count($resultSet) > 1) {
-            throw new Exception("Retrieved more than one element! criteria: " . get_class($this));
+            throw new Exception('Retrieved more than one element! criteria: ' . get_class($this));
         } else if (isset($resultSet[0])) {
             return $resultSet[0];
         } else {

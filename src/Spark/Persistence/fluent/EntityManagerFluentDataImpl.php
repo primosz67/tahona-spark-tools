@@ -100,7 +100,7 @@ class EntityManagerFluentDataImpl implements FluentData {
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
      */
-    public function get(string $class, $id) : object {
+    public function get(string $class, $id) {
         $entity = $this->em->find($class, $id);
         if (Objects::isNull($entity)) {
             throw  new EntityNotFoundException('Entity not found');
