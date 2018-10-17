@@ -22,17 +22,10 @@ class PhpMailHandler implements MailHandler {
     private $logger;
 
     /**
-     * @Inject()
-     * @var LoggerFactory
-     */
-    private $loggerFactory;
-
-
-    /**
      * @PostConstruct()
      */
     public function init() {
-        $this->logger = $this->loggerFactory->getLogger(PhpMailHandler::class);
+        $this->logger = LoggerFactory::getLogger(PhpMailHandler::class);
     }
 
     public function send(Mail $mailData, MailerConfig $config) {

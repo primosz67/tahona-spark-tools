@@ -10,6 +10,7 @@ namespace Spark\Persistence\Migration;
 use Doctrine\ORM\EntityManager;
 use Spark\Utils\DateUtils;
 use Spark\Utils\Objects;
+use Spark\Utils\StringUtils;
 
 class DataUpdater {
 
@@ -34,7 +35,7 @@ class DataUpdater {
 
         $count = $this->entityManager->getRepository(Objects::getClassName($migration))
             ->count([
-                DataMigration::D_NAME => $title,
+                DataMigration::D_NAME => StringUtils::trim($title),
                 DataMigration::D_VERSION => $version,
             ]);
 
