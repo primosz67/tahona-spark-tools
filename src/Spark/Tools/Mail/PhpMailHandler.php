@@ -16,28 +16,18 @@ use Spark\Utils\StringUtils;
 
 class PhpMailHandler implements MailHandler {
 
+
     /**
+     * @Inject
      * @var Logger
      */
     private $logger;
 
-    /**
-     * @Inject
-     * @var LoggerFactory
-     */
-    private $loggerFactory;
-
-    /**
-     * @PostConstruct()
-     */
-    public function init() {
-        $this->logger = $this->loggerFactory->getLogger(PhpMailHandler::class);
-    }
 
     public function send(Mail $mailData, MailerConfig $config) {
 
         $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
-        $this->logger->info('Message sending');
+        $this->logger->info($this, 'Message sending');
 
         try {
             //Server settings
