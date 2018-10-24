@@ -51,7 +51,7 @@ class LoggerWrapper implements Logger {
         if (Objects::isString($obj)) {
             $class = $obj;
         } else {
-            $class = Objects::getSimpleClassName($obj);
+            $class = Objects::getClassName($obj);
         }
 
         if (!Collections::hasKey($this->cache, $class)) {
@@ -70,7 +70,10 @@ class LoggerWrapper implements Logger {
                     })->get();
 
                 $newClass = $module . "\\" . StringUtils::join("\\", $sublist) . "\\" . $className;
+
                 $this->cache[$class] = StringUtils::replace($newClass, "\\", '.');
+            } else {
+                $this->cache[$class] = StringUtils::replace($class, "\\", '.');
             }
         }
 
