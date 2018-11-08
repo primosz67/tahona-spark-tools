@@ -30,10 +30,10 @@ class PhpMailHandler implements MailHandler {
         try {
             //Server settings
             $mail->SMTPDebug = 2; // Enable verbose debug output
-            $mail->CharSet = "UTF-8";
+            $mail->CharSet = 'UTF-8';
 
             $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = StringUtils::join(";", $config->getHosts());  // Specify main and backup SMTP servers
+            $mail->Host = StringUtils::join(';', $config->getHosts());  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
             $mail->Username = $config->getUserName();                 // SMTP username
             $mail->Password = $config->getPassword();                           // SMTP password

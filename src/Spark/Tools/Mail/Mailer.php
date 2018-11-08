@@ -24,7 +24,7 @@ use Spark\Utils\StringUtils;
  */
 class Mailer implements ConfigAware {
 
-    const NAME = "mailer";
+    public const NAME = 'mailer';
 
     /**
      * @var MailerConfig
@@ -42,11 +42,14 @@ class Mailer implements ConfigAware {
 
 
     public function send(Mail $mail) {
-        Asserts::checkArgument($this->isValid($mail), "Wrong email format!");
+        Asserts::checkArgument($this->isValid($mail), 'Wrong email format!');
 
         $this->handler->send($mail, $this->configuration);
     }
 
+    /**
+     * @deprecated
+     */
     public function sendMail($mailTO, $userName, $title, $content) {
         $mail = new Mail();
         $mail->setTo($mailTO);

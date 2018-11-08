@@ -24,10 +24,9 @@ class MailUtils {
                     return false;
                 }
             }
-
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

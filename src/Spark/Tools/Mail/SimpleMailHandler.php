@@ -14,9 +14,9 @@ class SimpleMailHandler implements MailHandler {
         $headers = FluentIterables::of([])
             ->add('MIME-Version: 1.0')
             ->add('Content-type: text/html; charset=utf-8')
-            ->add("To: " . $this->toMailHeader($mail->getTo()))
-            ->add("From: " . $this->toMailHeader($mail->getFrom()))
-            ->add("List-Unsubscribe: <" . $mail->getUnsubscribeUrl() . ">")
+            ->add('To: ' . $this->toMailHeader($mail->getTo()))
+            ->add('From: ' . $this->toMailHeader($mail->getFrom()))
+            ->add('List-Unsubscribe: <' . $mail->getUnsubscribeUrl() . '>')
             ->get();
 
         mail($mail->getTo(), $mail->getTitle(), $mail->getContent(),
@@ -28,9 +28,9 @@ class SimpleMailHandler implements MailHandler {
         if (is_array($mail)) {
             $mailList = array();
             foreach ($mail as $mailValue => $mailText) {
-                $mailList[] = $mailText . " <" . $mailValue . ">,";
+                $mailList[] = $mailText . ' <' . $mailValue . '>,';
             }
-            return StringUtils::join(",", $mailList);
+            return StringUtils::join(',', $mailList);
         }
         return $mail;
     }
