@@ -7,9 +7,7 @@ namespace Spark\Tools\Mail;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Spark\Core\Annotation\Inject;
-use Spark\Core\Annotation\PostConstruct;
 use Spark\Logger\Logger;
-use Spark\Logger\LoggerFactory;
 use Spark\Utils\FilterUtils;
 use Spark\Utils\Objects;
 use Spark\Utils\StringUtils;
@@ -62,12 +60,12 @@ class PhpMailHandler implements MailHandler {
 
             $mail->send();
 
-            $this->logger->info('Message has been sent to ' . $mailData->getTo());
+            $this->logger->info($this,'Message has been sent to ' . $mailData->getTo());
 
         } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
-            $this->logger->error($e->getTraceAsString());
-            $this->logger->error($mail->ErrorInfo);
+            $this->logger->error($this,$e->getMessage());
+            $this->logger->error($this,$e->getTraceAsString());
+            $this->logger->error($this,$mail->ErrorInfo);
         }
     }
 }
