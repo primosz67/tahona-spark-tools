@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping;
  */
 final class Min implements Mapping\Annotation {
 
-    public $errorCode = "error.message.min";
+    public $errorCode = 'error.message.min';
 
     /**
      * @var int

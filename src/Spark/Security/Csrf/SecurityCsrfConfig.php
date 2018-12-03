@@ -8,7 +8,7 @@ use Spark\Core\Annotation\Bean;
 use Spark\Security\Csrf\View\CsrfSecurityViewSmartyPlugin;
 
 class SecurityCsrfConfig {
-    const KEY = "csrf";
+    public const KEY = 'csrf';
 
     
     /**
