@@ -11,7 +11,7 @@ class MailerConfig {
     private $userName;
     private $password;
     private $port = 587;
-    private $securityProtocol = "tls";
+    private $securityProtocol = ''; //tls and ssl
 
     /**
      * @return array

@@ -37,7 +37,10 @@ class PhpMailHandler implements MailHandler {
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
             $mail->Username = $config->getUserName();                 // SMTP username
             $mail->Password = $config->getPassword();                           // SMTP password
-            $mail->SMTPSecure = $config->getSecurityProtocol();                            // Enable TLS encryption, `ssl` also accepted
+
+            if (StringUtils::isNotBlank()) {
+                $mail->SMTPSecure = $config->getSecurityProtocol();                            // Enable TLS encryption, `ssl` also accepted
+            }
             $mail->Port = $config->getPort();                                    // TCP port to connect to
 
             //Recipients
@@ -59,13 +62,14 @@ class PhpMailHandler implements MailHandler {
             $mail->AltBody = FilterUtils::stripTags($mailData->getContent());
 
             $mail->send();
-
             $this->logger->info($this,'Message has been sent to ' . $mailData->getTo());
 
         } catch (Exception $e) {
             $this->logger->error($this,$e->getMessage());
             $this->logger->error($this,$e->getTraceAsString());
             $this->logger->error($this,$mail->ErrorInfo);
+
+            throw $e;
         }
     }
 }
