@@ -4,7 +4,7 @@
   "type": "library",
 
   "keywords": ["mvc"],
-  "homepage": "https://github.com/primosz67/spark-spark",
+  "homepage": "https://github.com/tahonapl/spark-spark",
   "license": "MIT",
   "authors": [
     {
@@ -16,7 +16,6 @@
   ],
 
   "require": {
-    
     "php": ">=5.3", 
     "tahona/spark-mvc": "*",
     "doctrine/orm": ">=v2.4.8",
@@ -35,5 +34,6 @@
       "Spark\\": "src/"
     }
   }
+
 }
 
