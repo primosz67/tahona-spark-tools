@@ -2,9 +2,7 @@
 
 namespace Spark\Persistence\Crud;
 
-use Doctrine\Common\Collections\Collection;
 use Spark\Common\Optional;
-use Spark\Core\Service\ServiceHelper;
 use Spark\Persistence\exception\EntityNotFoundException;
 use Spark\Tools\Pagination\PaginationParams;
 use Spark\Tools\Pagination\SimplePagination;
@@ -15,7 +13,7 @@ use Spark\Utils\Collections;
  * Class CrudService
  * @package Spark\persistence\crud
  */
-abstract class CrudService extends ServiceHelper {
+abstract class CrudService {
 
     /**
      * @param $id

@@ -10,10 +10,28 @@ namespace Spark\Controller;
 
 
 use Spark\Controller;
+use Spark\Core\Annotation\Inject;
+use Spark\Core\Annotation\PostConstruct;
+use Spark\Core\Provider\BeanProvider;
 use Spark\Security\Core\Service\AuthenticationService;
 
 class LoggedUserController extends Controller {
 
+    private $authService;
+
+    /**
+     * @Inject
+     * @var BeanProvider
+     */
+    private $beanProvider;
+
+    /**
+     * @PostConstruct()
+     */
+    public function initBeans() {
+        $this->authService = $this->beanProvider->getBean(AuthenticationService::NAME);
+        $this->beanProvider = null;
+    }
 
     public function getLoggedUser() {
         return $this->getAuthenticationService()->getAuthUser();
@@ -22,8 +40,8 @@ class LoggedUserController extends Controller {
     /**
      * @return AuthenticationService
      */
-    protected  function getAuthenticationService() {
-        return $this->get(AuthenticationService::NAME);
+    protected function getAuthenticationService() {
+        return $this->authService;
     }
 
 } 

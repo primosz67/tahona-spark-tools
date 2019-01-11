@@ -29,6 +29,7 @@ use Spark\Form\Validator\Annotation\validator\SizeAnnotationTypeValidator;
 use Spark\Form\Validator\Annotation\validator\ZipCodeAnnotationTypeValidator;
 use Spark\Utils\Asserts;
 use Spark\Utils\Predicates;
+use Spark\Utils\Reflection\AnnotationReaderProvider;
 use Spark\Utils\ReflectionUtils;
 use Spark\Utils\ValidatorUtils;
 use Spark\Utils\Collections;
@@ -45,16 +46,16 @@ class AnnotationValidator extends EntityValidator {
     private $langMessageResource;
 
     /**
-     * @var \Doctrine\Common\Annotations\AnnotationReader
+     * @var AnnotationReaderProvider
      */
     private $annotationReader;
 
     /**
      * AnnotationValidator constructor.
      * @param LangMessageResource $langMessageResource
-     * @param AnnotationReader $annotationReader
+     * @param AnnotationReaderProvider $annotationReader
      */
-    public function __construct(LangMessageResource $langMessageResource, AnnotationReader $annotationReader) {
+    public function __construct(LangMessageResource $langMessageResource, AnnotationReaderProvider $annotationReader) {
         $this->langMessageResource = $langMessageResource;
         $this->annotationTypeValidators = array();
         $this->annotationReader = $annotationReader;
@@ -138,7 +139,8 @@ class AnnotationValidator extends EntityValidator {
     private function getValidateFunction($obj, $value, $reflectionProperty) {
         return function ($typeValidator) use ($reflectionProperty, $obj, $value) {
             /** @var AnnotationTypeValidator $typeValidator */
-            $annotation = $this->annotationReader->getPropertyAnnotation($reflectionProperty, $typeValidator->getAnnotationClassName());
+            $annotation = $this->annotationReader->get()
+                ->getPropertyAnnotation($reflectionProperty, $typeValidator->getAnnotationClassName());
 
             if (Objects::isNotNull($annotation) && !$typeValidator->isValid($obj, $value, $annotation)) {
                 return $this->resolveMessage($annotation, $typeValidator->getAnnotationValues($annotation));

@@ -10,24 +10,32 @@ namespace Spark\Controller;
 
 
 use Doctrine\ORM\EntityManager;
-use Spark\Common\IllegalArgumentException;
-use Spark\Common\IllegalStateException;
 use Spark\Controller;
-
-use Spark\Persistence\tools\EntityManagerFactory;
+use Spark\Core\Annotation\Inject;
+use Spark\Core\Provider\BeanProvider;
 use Spark\Persistence\tx\TransactionAware;
-use Spark\Container;
-use Spark\Utils\Asserts;
 
 class TransactionAwareController extends Controller {
 
     use TransactionAware;
 
+    private $entityManager;
+
+    /**
+     * @Inject
+     * @var BeanProvider
+     */
+    private $beanProvider;
+
+    public function initBeans() {
+        $this->entityManager = $this->beanProvider->getBean('entityManager');
+        $this->beanProvider = null;
+    }
     /**
      * @return EntityManager
      */
     protected  function getEm() {
-        return $this->get("entityManager");
+        return $this->entityManager;
     }
 
 }

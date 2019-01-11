@@ -16,6 +16,7 @@ use Spark\Core\Lang\LangMessageResource;
 use Spark\Utils\Collections;
 use Spark\Utils\Functions;
 use Spark\Utils\Objects;
+use Spark\Utils\Reflection\AnnotationReaderProvider;
 
 class DoctrineAnnotationValidator extends AnnotationValidator {
 
@@ -24,7 +25,7 @@ class DoctrineAnnotationValidator extends AnnotationValidator {
      */
     private $em;
 
-    public function __construct(EntityManager $em, LangMessageResource  $lang, AnnotationReader $annotationReader) {
+    public function __construct(EntityManager $em, LangMessageResource  $lang, AnnotationReaderProvider $annotationReader) {
         parent::__construct($lang, $annotationReader);
         $this->em = $em;
     }
